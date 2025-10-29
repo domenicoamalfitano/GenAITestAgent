@@ -1,0 +1,1 @@
+package com.example; import org.junit.jupiter.api.Test; import static org.junit.jupiter.api.Assertions.assertEquals; public class MyClassTest { @Test @DisplayName("Test addNumbers with positive numbers") void testAddPositive() { assertEquals(5, MyClass.addNumbers(2, 3)); } // ... }
