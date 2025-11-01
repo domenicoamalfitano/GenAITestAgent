@@ -12,8 +12,7 @@ public class MyClass {
         return num/den;
     }
 
-    public static int max(int[] array, int n)
-    {
+    public static int max(int[] array, int n) {
         int max=0;
         for(int i=0;i<n;i++){
             if(array[i]>max)
@@ -22,7 +21,7 @@ public class MyClass {
         return max;
     }
 
-    public String reverse(String s){
+    public String reverse(String s) {
         int n = s.length();
         char[] out = new char[n];
         for (int i = 0; i < n; i++) {
@@ -31,7 +30,7 @@ public class MyClass {
         return new String(out);
     }
 
-    public static int[] bubbleSort(int[] myArray) {
+    public int[] bubbleSort(int[] myArray) {
 
         int temp = 0;  //  temporary element for swapping
         int counter = 0;
@@ -69,7 +68,7 @@ public class MyClass {
      * - Dominio: supporto IDN (unicode -> punycode), lunghezza totale <= 253
      *   e ogni etichetta 1..63 con caratteri validi.
      */
-    public static boolean isValidEmail(String email) {
+    public boolean isValidEmail(String email) {
         if (email == null) return false;
 
         String trimmed = email.trim();
@@ -132,8 +131,9 @@ public class MyClass {
                 "alice@exa_mple.com",              // no
                 "toolonglocalparttoolonglocalparttoolonglocalparttoolong@example.com" // no
         };
+        MyClass myClass = new MyClass();
         for (String t : tests) {
-            System.out.printf("%-50s -> %s%n", t, isValidEmail(t));
+            System.out.printf("%-50s -> %s%n", t, myClass.isValidEmail(t));
         }
     }
 }

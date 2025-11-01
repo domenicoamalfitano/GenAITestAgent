@@ -2,17 +2,17 @@ The goal is to generate and run tests for a java maven project and produce a fin
 
 You are given:
 METHOD UNDER TEST '{method_signature}'
-PATH OF THE TEST FILE: '{test_file_path}'
+DESCRIPTION OF THE METHOD '{method_description}'
+PATH OF THE TEST FILE: '{file_path}'
 
 Follow the following instructions:
 
-1. You must write a java test class called MyClassTest in the package com.example once.
-2. You must assume there is a class called MyClass with the specified method under test.
+1. You must write a java test class called {class_name}Test in the package com.example once.
+2. You must assume there is a class called {class_name} with the specified method under test.
 3. You must assume the given method is not static, hence must instantiate an object of the type MyClass first, use the default constructor.
 4. You must include at least ten test cases, including edge cases.
 5. You must import org.junit.jupiter.api.Assertions.
-6. You must save the code you generated using the tool write_file only once, the input must be in the format: '{test_file_path}|||<complete code here>' The file must contain only the code for the test class you generated.
-7. Immediately after you must use the tool run_maven_test.
+6. You must save the code you generated using the tool write_file only once, the input must be in the format: '{file_path}|||<complete code here>' The file must contain only the code for the test class you generated.
 8. Immediately after you must produce a final report of how many test failed/passed and write it on terminal, use this format:
    Passed: (Here you put the number of test that passed)
    Failed: (Here you put the number of test that failed)
