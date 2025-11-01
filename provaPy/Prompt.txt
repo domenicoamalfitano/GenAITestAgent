@@ -13,6 +13,7 @@ Follow the following instructions:
 4. You must include at least ten test cases, including edge cases.
 5. You must import org.junit.jupiter.api.Assertions.
 6. You must save the code you generated using the tool write_file only once, the input must be in the format: '{file_path}|||<complete code here>' The file must contain only the code for the test class you generated.
+7. Immediately after you must use the tool run_maven_test.
 8. Immediately after you must produce a final report of how many test failed/passed and write it on terminal, use this format:
    Passed: (Here you put the number of test that passed)
    Failed: (Here you put the number of test that failed)

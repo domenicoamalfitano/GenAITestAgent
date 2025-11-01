@@ -40,12 +40,12 @@ PROMPT_SOURCE = "PromptSource.txt"
 
 TEST_JAVA_DIR.mkdir(parents=True, exist_ok=True)
 
-# take only the methods into a class/ test class
-def takeMethods(code: str) -> str:
+# take only the code into a class/ test class
+def takeCodeInsideClass(code: str) -> str:
     match = re.search(r'public class (\w+)\s*{(.*)}', code, re.DOTALL)
     return match.group(2) + "\n" if match else code
 
-# write file tool
+# write file tool, if the file exists append only new methods into the class, if the method already exists, replace it
 def write_file(input_str: str) -> str:
     try:
         separator = '|||'
@@ -54,6 +54,7 @@ def write_file(input_str: str) -> str:
 
         file_path, code = input_str.split(separator, 1)
         path = Path(file_path.strip().strip("'").strip('"')).resolve()
+        print(f"codice:\n----------------\n {code}\n--------------")
         code = code.strip().rstrip("'").rstrip('"').replace("```","").replace("<complete code here>","").strip()
 
         # vincolo: deve stare sotto MAIN_JAVA_DIR o TEST_JAVA_DIR
@@ -69,7 +70,7 @@ def write_file(input_str: str) -> str:
             with path.open("r", encoding='utf-8') as f:
                 existing_code = f.read()
 
-            new_code = takeMethods(code)
+            new_code = takeCodeInsideClass(code)
             
             lastPos = existing_code.rfind('}')
             if lastPos == -1:
@@ -118,7 +119,15 @@ def run_maven_test(input_str: str = "") -> str:
         return f"Errore durante l'esecuzione di Maven: {str(e)}"
 
 
-tools = [
+tools_test = [
+    Tool(
+        name="write_file",
+        func=write_file,
+        description="Salva codice in un file. Formato: 'percorso_file|||contenuto_codice'"
+    )
+]
+
+tools_source = [
     Tool(
         name="write_file",
         func=write_file,
@@ -150,6 +159,7 @@ def return_template_for_test_or_code(typeTemplate: str)-> PromptTemplate:
         import static org.junit.jupiter.api.Assertions.*;
 
         public class MyClassTest {{
+            
             // code  here
         }}"""
     elif typeTemplate=="source":
@@ -159,6 +169,7 @@ def return_template_for_test_or_code(typeTemplate: str)-> PromptTemplate:
         package com.example;
 
         public class MyClass {{
+            
             // code  here
         }}"""
     else:
@@ -208,19 +219,19 @@ promptSource = return_template_for_test_or_code("source")
 # prompt = PromptTemplate.from_template(template)
 print("✅ Prompt template creato")
 
-agent = create_react_agent(llm, tools, prompt)
+agent = create_react_agent(llm, tools_test, prompt)
 agent_executor_test = AgentExecutor(
     agent=agent,
-    tools=tools,
+    tools=tools_test,
     verbose=True,
     max_iterations=3,
     handle_parsing_errors=True
 )
 
-agent_source = create_react_agent(llm, tools, promptSource)
+agent_source = create_react_agent(llm, tools_source, promptSource)
 agent_executor_source = AgentExecutor(
     agent=agent_source,
-    tools=tools,
+    tools=tools_source,
     verbose=True,
     max_iterations=3,
     handle_parsing_errors=True
@@ -256,8 +267,8 @@ if __name__ == "__main__":
         # open signature file and read method signatures with optional description
         with open(f"{filename}","r") as f:
             lines = [line.strip() for line in f if line.strip()]
-            method_signature = ""
-            method_description = ""
+        method_signature = ""
+        method_description = ""
         i = 0
         # call generate_tests_for_method for each method signature in the file
         while i < len(lines):
@@ -278,12 +289,27 @@ if __name__ == "__main__":
             # generate tests for the method
             file_path = str(TEST_JAVA_DIR / f"{sigFileName}Test.java")
             result = generate_tests_for_method(method_signature, method_description, sigFileName, file_path, PROMPT_TEST, agent_executor_test)
-            
+        i= 0
+        method_signature = ""
+        method_description = ""
+        while i < len(lines):
+            line = lines[i]
+            # check if the method has a description
+            if line.startswith("#"):
+                method_description = line[1:].strip()
+                if i+1 < len(lines):
+                    method_signature = lines[i+1]
+                    i += 2
+                else:
+                    break
+            else:
+                method_description = ""
+                method_signature = line
+                i += 1
             file_path = str(MAIN_JAVA_DIR / f"{sigFileName}.java")
             result_source = generate_tests_for_method(method_signature, method_description, sigFileName, file_path, PROMPT_SOURCE, agent_executor_source)
 
 
-            # print(f"Risultato generazione test per {method_signature}:\n{result['output']}\n\n")
             
     
 
