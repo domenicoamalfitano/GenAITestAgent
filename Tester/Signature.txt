@@ -1,0 +1,4 @@
+int[] bubbleSort(int[] myArray)
+Sorts myArray in ascending order using bubble sort, repeatedly swapping adjacent out-of-order elements until no swaps are needed, then returns the sorted array
+boolean isValidEmail(String email)
+Returns true if the given string looks like a valid email address (e.g., localpart@domain.tld) and false otherwise
