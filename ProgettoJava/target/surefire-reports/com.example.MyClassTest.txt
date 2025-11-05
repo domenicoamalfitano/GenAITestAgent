@@ -1,4 +1,17 @@
 -------------------------------------------------------------------------------
 Test set: com.example.MyClassTest
 -------------------------------------------------------------------------------
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.032 s -- in com.example.MyClassTest
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.031 s <<< FAILURE! -- in com.example.MyClassTest
+com.example.MyClassTest.testMethod -- Time elapsed: 0.016 s <<< ERROR!
+java.lang.Error: 
+Unresolved compilation problems: 
+	expected cannot be resolved to a variable
+	The method methodUnderTest() is undefined for the type MyClass
+	The method getSomeProperty() is undefined for the type MyClass
+	The method isSomeConditionMet() is undefined for the type MyClass
+
+	at com.example.MyClassTest.testMethod(MyClassTest.java:12)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+

@@ -5,157 +5,167 @@ import org.junit.jupiter.api.DisplayName;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class Signature1Test {
-
+    
     @Test
-    @DisplayName("Test divide with positive numbers")
-    public void testDividePositive() {
-        Signature1 signature1 = new Signature1();
-        assertEquals(0.5f, signature1.divide(2, 4), "Division of two positive numbers");
+    @DisplayName("Test divide with positive numbers returns correct result")
+    void testDividePositiveNumbers_returnsCorrectResult() {
+        Signature1 instance = new Signature1();
+        float result = instance.divide(4, 2);
+        assertEquals(2.0f, result, 0.001f);
     }
 
     @Test
-    @DisplayName("Test divide with zero denominator")
-    public void testDivideZeroDenominator() {
-        Signature1 signature1 = new Signature1();
-        assertThrows(ArithmeticException.class, () -> signature1.divide(2, 0), "Division by zero");
+    @DisplayName("Test divide by zero throws ArithmeticException")
+    void testDivideByZero_throwsArithmeticException() {
+        Signature1 instance = new Signature1();
+        assertThrows(ArithmeticException.class, () -> instance.divide(5, 0));
     }
 
     @Test
-    @DisplayName("Test divide with negative numbers")
-    public void testDivideNegative() {
-        Signature1 signature1 = new Signature1();
-        assertEquals(-0.5f, signature1.divide(-2, 4), "Division of two negative numbers");
+    @DisplayName("Test divide negative numerator by positive denominator returns correct result")
+    void testDivideNegativeNumeratorByPositiveDenominator_returnsCorrectResult() {
+        Signature1 instance = new Signature1();
+        float result = instance.divide(-6, 3);
+        assertEquals(-2.0f, result, 0.001f);
     }
 
     @Test
-    @DisplayName("Test divide with zero numerator and denominator")
-    public void testDivideZeroNumeratorAndDenominator() {
-        Signature1 signature1 = new Signature1();
-        assertEquals(0.0f, signature1.divide(0, 4), "Division of zero by a number");
+    @DisplayName("Test divide positive numerator by negative denominator returns correct result")
+    void testDividePositiveNumeratorByNegativeDenominator_returnsCorrectResult() {
+        Signature1 instance = new Signature1();
+        float result = instance.divide(6, -3);
+        assertEquals(-2.0f, result, 0.001f);
     }
 
     @Test
-    @DisplayName("Test divide with very large numbers")
-    public void testDivideLargeNumbers() {
-        Signature1 signature1 = new Signature1();
-        assertEquals(1000000.0f, signature1.divide(2000000, 2), "Division of two large numbers");
+    @DisplayName("Test divide negative numerator by negative denominator returns correct result")
+    void testDivideNegativeNumeratorByNegativeDenominator_returnsCorrectResult() {
+        Signature1 instance = new Signature1();
+        float result = instance.divide(-8, -4);
+        assertEquals(2.0f, result, 0.001f);
     }
 
     @Test
-    @DisplayName("Test divide with very small numbers")
-    public void testDivideSmallNumbers() {
-        Signature1 signature1 = new Signature1();
-        assertEquals(-0.5f, signature1.divide(-10000, 20000), "Division of two small negative numbers");
+    @DisplayName("Test divide zero numerator by positive denominator returns zero")
+    void testDivideZeroNumeratorByPositiveDenominator_returnsZero() {
+        Signature1 instance = new Signature1();
+        float result = instance.divide(0, 5);
+        assertEquals(0.0f, result, 0.001f);
     }
 
     @Test
-    @DisplayName("Test divide with same numerator and denominator")
-    public void testDivideSameNumbers() {
-        Signature1 signature1 = new Signature1();
-        assertEquals(1.0f, signature1.divide(2, 2), "Division of the same number by itself");
+    @DisplayName("Test divide 5 by 2 returns 2.5")
+    void testDivideFiveByTwo_returnsTwoPointFive() {
+        Signature1 instance = new Signature1();
+        float result = instance.divide(5, 2);
+        assertEquals(2.5f, result, 0.001f);
     }
 
     @Test
-    @DisplayName("Test divide with very large numerator and small denominator")
-    public void testDivideLargeNumeratorSmallDenominator() {
-        Signature1 signature1 = new Signature1();
-        assertEquals(500000.0f, signature1.divide(1000000, 2), "Division of a large number by a small number");
+    @DisplayName("Test divide 10 by 3 returns 3.333")
+    void testDivideTenByThree_returnsThreePointThreeThree() {
+        Signature1 instance = new Signature1();
+        float result = instance.divide(10, 3);
+        assertEquals(3.333f, result, 0.001f);
     }
 
     @Test
-    @DisplayName("Test divide with very small numerator and large denominator")
-    public void testDivideSmallNumeratorLargeDenominator() {
-        Signature1 signature1 = new Signature1();
-        assertEquals(-0.25f, signature1.divide(-10000, 40000), "Division of a small negative number by a large positive number");
+    @DisplayName("Test divide by 1 returns numerator as float")
+    void testDivideByOne_returnsNumeratorAsFloat() {
+        Signature1 instance = new Signature1();
+        float result = instance.divide(7, 1);
+        assertEquals(7.0f, result, 0.001f);
     }
 
-@Test
-    @DisplayName("Test 1: Empty array")
-    public void testEmptyArray() {
-        Signature1 myClass = new Signature1();
-        int[] myArray = {};
+    @Test
+    @DisplayName("Test divide 1 by 1000 returns 0.001")
+    void testDivideOneByThousand_returnsZeroPointZeroZeroOne() {
+        Signature1 instance = new Signature1();
+        float result = instance.divide(1, 1000);
+        assertEquals(0.001f, result, 0.001f);
+    }
+
+    @Test
+    @DisplayName("Test unsorted array with bubbleSort returns sorted array")
+    void testUnsortedArray_bubbleSort_returnsSortedArray() {
+        Signature1 instance = new Signature1();
+        int[] input = {3, 1, 2};
+        int[] expected = {1, 2, 3};
+        int[] result = instance.bubbleSort(input);
+        assertArrayEquals(expected, result);
+    }
+
+    @Test
+    @DisplayName("Test array with duplicates and negatives with bubbleSort returns sorted array")
+    void testArrayWithDuplicatesAndNegatives_bubbleSort_returnsSortedArray() {
+        Signature1 instance = new Signature1();
+        int[] input = {5, -3, 0, 4, -3, 2};
+        int[] expected = {-3, -3, 0, 2, 4, 5};
+        int[] result = instance.bubbleSort(input);
+        assertArrayEquals(expected, result);
+    }
+
+    @Test
+    @DisplayName("Test reverse-sorted array with bubbleSort returns sorted array")
+    void testReverseSortedArray_bubbleSort_returnsSortedArray() {
+        Signature1 instance = new Signature1();
+        int[] input = {5, 4, 3, 2, 1};
+        int[] expected = {1, 2, 3, 4, 5};
+        int[] result = instance.bubbleSort(input);
+        assertArrayEquals(expected, result);
+    }
+
+    @Test
+    @DisplayName("Test empty array with bubbleSort returns empty array")
+    void testEmptyArray_bubbleSort_returnsEmptyArray() {
+        Signature1 instance = new Signature1();
+        int[] input = {};
         int[] expected = {};
-        assertArrayEquals(expected, myClass.bubbleSort(myArray));
+        int[] result = instance.bubbleSort(input);
+        assertArrayEquals(expected, result);
     }
 
     @Test
-    @DisplayName("Test 2: Single element array")
-    public void testSingleElementArray() {
-        Signature1 myClass = new Signature1();
-        int[] myArray = {5};
-        int[] expected = {5};
-        assertArrayEquals(expected, myClass.bubbleSort(myArray));
+    @DisplayName("Test single-element array with bubbleSort returns same array")
+    void testSingleElementArray_bubbleSort_returnsSameArray() {
+        Signature1 instance = new Signature1();
+        int[] input = {42};
+        int[] expected = {42};
+        int[] result = instance.bubbleSort(input);
+        assertArrayEquals(expected, result);
     }
 
     @Test
-    @DisplayName("Test 3: Two element array in ascending order")
-    public void testTwoElementArrayAscendingOrder() {
-        Signature1 myClass = new Signature1();
-        int[] myArray = {2, 4};
-        int[] expected = {2, 4};
-        assertArrayEquals(expected, myClass.bubbleSort(myArray));
+    @DisplayName("Test array with multiple duplicates with bubbleSort returns sorted array")
+    void testArrayWithMultipleDuplicates_bubbleSort_returnsSortedArray() {
+        Signature1 instance = new Signature1();
+        int[] input = {2, 1, 3, 3, 2};
+        int[] expected = {1, 2, 2, 3, 3};
+        int[] result = instance.bubbleSort(input);
+        assertArrayEquals(expected, result);
     }
 
     @Test
-    @DisplayName("Test 4: Two element array in descending order")
-    public void testTwoElementArrayDescendingOrder() {
-        Signature1 myClass = new Signature1();
-        int[] myArray = {4, 2};
-        int[] expected = {2, 4};
-        assertArrayEquals(expected, myClass.bubbleSort(myArray));
+    @DisplayName("Test valid standard email with isValidEmail returns true")
+    void testValidStandardEmail_isValidEmail() {
+        Signature1 instance = new Signature1();
+        boolean result = instance.isValidEmail("user@example.com");
+        assertTrue(result);
     }
 
     @Test
-    @DisplayName("Test 5: Three element array in ascending order")
-    public void testThreeElementArrayAscendingOrder() {
-        Signature1 myClass = new Signature1();
-        int[] myArray = {1, 3, 2};
-        int[] expected = {1, 2, 3};
-        assertArrayEquals(expected, myClass.bubbleSort(myArray));
+    @DisplayName("Test invalid email with no top-level domain returns false")
+    void testInvalidEmailNoTopLevelDomain_isValidEmail() {
+        Signature1 instance = new Signature1();
+        boolean result = instance.isValidEmail("user@example");
+        assertFalse(result);
     }
 
     @Test
-    @DisplayName("Test 6: Three element array in descending order")
-    public void testThreeElementArrayDescendingOrder() {
-        Signature1 myClass = new Signature1();
-        int[] myArray = {3, 2, 1};
-        int[] expected = {1, 2, 3};
-        assertArrayEquals(expected, myClass.bubbleSort(myArray));
-    }
-
-    @Test
-    @DisplayName("Test 7: Four element array in ascending order")
-    public void testFourElementArrayAscendingOrder() {
-        Signature1 myClass = new Signature1();
-        int[] myArray = {1, 2, 3, 4};
-        int[] expected = {1, 2, 3, 4};
-        assertArrayEquals(expected, myClass.bubbleSort(myArray));
-    }
-
-    @Test
-    @DisplayName("Test 8: Four element array in descending order")
-    public void testFourElementArrayDescendingOrder() {
-        Signature1 myClass = new Signature1();
-        int[] myArray = {4, 3, 2, 1};
-        int[] expected = {1, 2, 3, 4};
-        assertArrayEquals(expected, myClass.bubbleSort(myArray));
-    }
-
-    @Test
-    @DisplayName("Test 9: Five element array in ascending order")
-    public void testFiveElementArrayAscendingOrder() {
-        Signature1 myClass = new Signature1();
-        int[] myArray = {1, 2, 3, 4, 5};
-        int[] expected = {1, 2, 3, 4, 5};
-        assertArrayEquals(expected, myClass.bubbleSort(myArray));
-    }
-
-    @Test
-    @DisplayName("Test 10: Five element array in descending order")
-    public void testFiveElementArrayDescendingOrder() {
-        Signature1 myClass = new Signature1();
-        int[] myArray = {5, 4, 3, 2, 1};
-        int[] expected = {1, 2, 3, 4, 5};
-        assertArrayEquals(expected, myClass.bubbleSort(myArray));
+    @DisplayName("Test valid email with special characters in local part returns true")
+    void testValidEmailWithSpecialCharactersInLocalPart_isValidEmail() {
+        Signature1 instance = new Signature1();
+        boolean result = instance.isValidEmail("user+tag@example.com");
+        assertTrue(result);
     }
 }

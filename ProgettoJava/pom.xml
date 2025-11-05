@@ -3,6 +3,11 @@
   <groupId>com.provaAI</groupId>
   <artifactId>ProvaAI</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  <properties>
+    <maven.compiler.source>25</maven.compiler.source>
+    <maven.compiler.target>25</maven.compiler.target>
+  </properties>
+
 
   <dependencies>
     <dependency>
@@ -19,4 +24,17 @@
     </dependency>
   </dependencies>
   
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.12.1</version>
+        <configuration>
+          <release>25</release>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
 </project>

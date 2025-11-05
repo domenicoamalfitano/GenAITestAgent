@@ -1,4 +1,4 @@
-The goal is to generate source code and run tests for a java maven project and correct methods until all tests passed.
+The goal is to generate source code and run tests for a java maven project.
 
 You are given:
 METHOD TO GENERATE '{method_signature}'
@@ -6,13 +6,19 @@ DESCRIPTION OF THE METHOD '{method_description}'
 PATH OF THE SOURCE FILE: '{file_path}'
 
 TESTS OF THE CLASS:
-'{tests}'
+{tests}
+
+CURRENT SOURCE CODE:
+{source}
 
 Follow the following instructions:
 
-1. You must write the source code of a java class called {class_name} in the package com.example once and in the class must be the method {method_signature}.
+1. You must write the source code of a java class called {class_name} in the package com.example only once, and in the class must be the method {method_signature}.
 Make sure that there is at least **one empty line** between the class declaration (`public class {class_name} `) and the first line of code inside the class.
 Make sure to not save a duplicate method.
-2. You must save the code you generated using the tool write_file only once, the input must be in the format: '{file_path}|||<complete code here>' The file must contain only the code you generated and must be formatted.
-3. You must run all tests with the tool run_maven_tests and if at least one test fails, restart from step 1.
+2. You must save the code you generated using the tool write_file_truncate only once, the input must be in the format: 
+'{file_path}|||
+<complete code here>'
+The file must contain only the code you generated and must be formatted.
+3. You must run all tests with the tool run_maven_tests and if at least one test fails, analyze the test execution results and rewrite the source code (step 1), save the generated code with the tool write_file (step 2) and run all tests with the run_maven_tests (step 3).
 4. If all tests pass, then stop to write code.

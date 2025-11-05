@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.example.MyClassTest" time="0.032" tests="2" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.example.MyClassTest" time="0.031" tests="1" errors="1" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="25"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -15,7 +15,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="IT"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Eclipse Adoptium\jdk-25.0.0.36-hotspot\bin"/>
-    <property name="sun.java.command" value="C:\Users\Zecca\AppData\Local\Temp\surefire16459369071419370927\surefirebooter-20251031192748253_3.jar C:\Users\Zecca\AppData\Local\Temp\surefire16459369071419370927 2025-10-31T19-27-48_139-jvmRun1 surefire-20251031192748253_1tmp surefire_0-20251031192748253_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\Zecca\AppData\Local\Temp\surefire17030437149418703856\surefirebooter-20251103123557868_3.jar C:\Users\Zecca\AppData\Local\Temp\surefire17030437149418703856 2025-11-03T12-35-57_770-jvmRun1 surefire-20251103123557868_1tmp surefire_0-20251103123557868_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="C:\Users\Zecca\OneDrive\Desktop\GenAITestAgent\ProgettoJava\target\test-classes;C:\Users\Zecca\OneDrive\Desktop\GenAITestAgent\ProgettoJava\target\classes;C:\Users\Zecca\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.0\junit-jupiter-api-5.10.0.jar;C:\Users\Zecca\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\Zecca\.m2\repository\org\junit\platform\junit-platform-commons\1.10.0\junit-platform-commons-1.10.0.jar;C:\Users\Zecca\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\Zecca\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.0\junit-jupiter-engine-5.10.0.jar;C:\Users\Zecca\.m2\repository\org\junit\platform\junit-platform-engine\1.10.0\junit-platform-engine-1.10.0.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -30,7 +30,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\Zecca\AppData\Local\Temp\surefire16459369071419370927\surefirebooter-20251031192748253_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\Zecca\AppData\Local\Temp\surefire17030437149418703856\surefirebooter-20251103123557868_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="25+36-LTS"/>
@@ -52,7 +52,7 @@
     <property name="failIfNoTests" value="false"/>
     <property name="sun.os.patch.level" value=""/>
     <property name="native.encoding" value="Cp1252"/>
-    <property name="java.library.path" value="C:\Program Files\Eclipse Adoptium\jdk-25.0.0.36-hotspot\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\Program Files\Eclipse Adoptium\jdk-25.0.0.36-hotspot\bin;C:\Program Files (x86)\Common Files\Oracle\Java\java8path;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA Corporation\NVIDIA App\NvDLISR;C:\Program Files\Git\cmd;C:\mingw64\bin;C:\Program Files\dotnet\;C:\xampp\php;C:\Program Files\nodejs\;C:\apache-maven-3.9.11\bin;C:\Program Files\cursor\resources\app\bin;C:\Users\Zecca\AppData\Local\Programs\Python\Python310\Scripts\;C:\Users\Zecca\AppData\Local\Programs\Python\Python310\;C:\Program Files\Eclipse Adoptium\jdk-25.0.0.36-hotspot\bin;C:\Program Files (x86)\Common Files\Oracle\Java\java8path;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA Corporation\NVIDIA App\NvDLISR;C:\Program Files\Git\cmd;C:\mingw64\bin;C:\Program Files\dotnet\;C:\xampp\php;C:\Program Files\nodejs\;C:\apache-maven-3.9.11\bin;C:\Program Files\cursor\resources\app\bin;C:\Users\Zecca\.cargo\bin;C:\Users\Zecca\AppData\Local\Programs\Python\Launcher\;C:\Users\Zecca\AppData\Local\Microsoft\WindowsApps;C:\Users\Zecca\AppData\Local\Programs\Microsoft VS Code\bin;C:\msys64\ucrt64\bin;C:\Users\Zecca\.dotnet\tools;C:\Users\Zecca\AppData\Roaming\npm;C:\Users\Zecca\AppData\Local\Programs\Ollama;C:\Users\Zecca\.cargo\bin;C:\Users\Zecca\AppData\Local\Python\bin;c:\Users\Zecca\.vscode\extensions\ms-python.debugpy-2025.14.1-win32-x64\bundled\scripts\noConfigScripts;c:\Users\Zecca\AppData\Roaming\Code\User\globalStorage\github.copilot-chat\debugCommand;."/>
+    <property name="java.library.path" value="C:\Program Files\Eclipse Adoptium\jdk-25.0.0.36-hotspot\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\Users\Zecca\OneDrive\Desktop\GenAITestAgent\venv\Scripts;C:\Program Files\Eclipse Adoptium\jdk-25.0.0.36-hotspot\bin;C:\Program Files (x86)\Common Files\Oracle\Java\java8path;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA Corporation\NVIDIA App\NvDLISR;C:\Program Files\Git\cmd;C:\mingw64\bin;C:\Program Files\dotnet\;C:\xampp\php;C:\Program Files\nodejs\;C:\apache-maven-3.9.11\bin;C:\Program Files\cursor\resources\app\bin;C:\Users\Zecca\AppData\Local\Programs\Python\Python310\Scripts\;C:\Users\Zecca\AppData\Local\Programs\Python\Python310\;C:\Program Files\Eclipse Adoptium\jdk-25.0.0.36-hotspot\bin;C:\Program Files (x86)\Common Files\Oracle\Java\java8path;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA Corporation\NVIDIA App\NvDLISR;C:\Program Files\Git\cmd;C:\mingw64\bin;C:\Program Files\dotnet\;C:\xampp\php;C:\Program Files\nodejs\;C:\apache-maven-3.9.11\bin;C:\Program Files\cursor\resources\app\bin;C:\Users\Zecca\.cargo\bin;C:\Users\Zecca\AppData\Local\Programs\Python\Launcher\;C:\Users\Zecca\AppData\Local\Microsoft\WindowsApps;C:\Users\Zecca\AppData\Local\Programs\Microsoft VS Code\bin;C:\msys64\ucrt64\bin;C:\Users\Zecca\.dotnet\tools;C:\Users\Zecca\AppData\Roaming\npm;C:\Users\Zecca\AppData\Local\Programs\Ollama;C:\Users\Zecca\.cargo\bin;C:\Users\Zecca\AppData\Local\Python\bin;c:\Users\Zecca\.vscode\extensions\ms-python.debugpy-2025.14.1-win32-x64\bundled\scripts\noConfigScripts;c:\Users\Zecca\.vscode\extensions\vscjava.vscode-java-debug-0.58.3\bundled\scripts\noConfigScripts;c:\Users\Zecca\AppData\Roaming\Code\User\globalStorage\github.copilot-chat\debugCommand;."/>
     <property name="java.vm.info" value="mixed mode, sharing"/>
     <property name="stderr.encoding" value="Cp1252"/>
     <property name="java.vendor" value="Eclipse Adoptium"/>
@@ -61,6 +61,18 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="69.0"/>
   </properties>
-  <testcase name="testDivideValidInputs" classname="com.example.MyClassTest" time="0.015"/>
-  <testcase name="testDivideZeroDenominator" classname="com.example.MyClassTest" time="0.002"/>
+  <testcase name="testMethod" classname="com.example.MyClassTest" time="0.016">
+    <error message="Unresolved compilation problems: &#10;	expected cannot be resolved to a variable&#10;	The method methodUnderTest() is undefined for the type MyClass&#10;	The method getSomeProperty() is undefined for the type MyClass&#10;	The method isSomeConditionMet() is undefined for the type MyClass&#10;" type="java.lang.Error"><![CDATA[java.lang.Error: 
+Unresolved compilation problems: 
+	expected cannot be resolved to a variable
+	The method methodUnderTest() is undefined for the type MyClass
+	The method getSomeProperty() is undefined for the type MyClass
+	The method isSomeConditionMet() is undefined for the type MyClass
+
+	at com.example.MyClassTest.testMethod(MyClassTest.java:12)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+]]></error>
+  </testcase>
 </testsuite>
