@@ -205,19 +205,19 @@ prompt_source = return_template_for_test_or_code("source")
 print("✅ Prompt template creato")
 
 # create and return AgentExecutor
-def create_agent_executor(tools, prompt):
+def create_agent_executor(tools, prompt, max_iterations):
     agent = create_react_agent(llm, tools, prompt)
     agent_executor = AgentExecutor(
         agent=agent,
         tools=tools,
         verbose=True,
-        max_iterations=3,
+        max_iterations=max_iterations,
         handle_parsing_errors=True
     )
     return agent_executor
 
-agent_executor_test = create_agent_executor(tools_test, prompt_test)
-agent_executor_source = create_agent_executor(tools_source, prompt_source)
+agent_executor_test = create_agent_executor(tools_test, prompt_test, 1)
+agent_executor_source = create_agent_executor(tools_source, prompt_source, 5)
 
 # function to generate tests for a method or methods for source code
 def generate_tests_or_source_for_method(method_signature: str, method_description: str, className: str, file_path: str, promptFile: str, agent_executor: AgentExecutor) -> str:
