@@ -1,0 +1,20 @@
+#Initializes the bank database with two sample accounts for testing
+BankDatabase()
+
+#Retrieves the Account object matching the given account number, or null if not found
+Account getAccount(int accountNumber)
+
+#Authenticates the user by verifying if the account number and PIN match an existing account
+boolean authenticateUser(int userAccountNumber, int userPIN)
+
+#Returns the available balance (funds that can be withdrawn) for the specified account number
+Euro getAvailableBalance(int userAccountNumber)
+
+#Returns the total balance (including pending deposits) for the specified account number
+Euro getTotalBalance(int userAccountNumber)
+
+#Credits (adds) the specified amount to the total balance of the given account number
+void credit(int userAccountNumber, Euro amount)
+
+#Debits (subtracts) the specified amount from the account’s available and total balances
+void debit(int userAccountNumber, Euro amount)

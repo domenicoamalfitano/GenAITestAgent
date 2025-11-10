@@ -1,0 +1,20 @@
+#constructor that initializes an Account object with the specified account number, PIN, available balance, and total balance
+Account(int theAccountNumber, int thePIN, Euro theAvailableBalance, Euro theTotalBalance)
+
+#Determines whether a user-specified PIN matches the stored PIN and returns true if they match, false otherwise
+boolean validatePIN(int userPIN)
+
+#Returns the amount of funds available for withdrawal from the account
+Euro getAvailableBalance()
+
+#Returns the total balance, which includes both available funds and pending deposits
+Euro getTotalBalance()
+
+#Adds the specified amount to the total balance of the account
+void credit(Euro amount)
+
+#Subtracts the specified amount from both the available balance and the total balance of the account
+void debit(Euro amount)
+
+#Returns the unique account number associated with this account
+int getAccountNumber()

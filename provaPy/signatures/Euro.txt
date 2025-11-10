@@ -1,0 +1,23 @@
+#Initializes a Euro object with the specified euro and cent values, handling positive and negative amounts correctly
+Euro(long euro, long cent)
+
+#Initializes a Euro object from a double value, converting it to cents
+Euro(double d)
+
+#Returns the total value of this Euro object in cents
+long getValore()
+
+#Adds the specified Euro amount to this object and returns the updated Euro
+Euro somma(Euro e)
+
+#Subtracts the specified Euro amount from this object and returns the updated Euro
+Euro sottrai(Euro e)
+
+#Returns true if this Euro object has the same value as the specified Euro, false otherwise
+boolean ugualeA(Euro e)
+
+#Returns true if this Euro object is less than or equal to the specified Euro, false otherwise
+boolean minoreDi(Euro e)
+
+#Returns a string representation of this Euro amount in euros followed by the word "euro"
+String stampa()
