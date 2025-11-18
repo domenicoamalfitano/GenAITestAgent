@@ -1,0 +1,39 @@
+The goal is to generate a single new test for a java maven project and produce a final report
+
+You are given:
+METHOD UNDER TEST '{method_signature}'
+DESCRIPTION OF THE METHOD '{method_description}'
+PATH OF THE TEST FILE: '{file_path}'
+CURRENT CLASS TEST:
+{tests}
+
+Follow the following instructions:
+1. You must write or update a java test class called {class_name}Test in the package com.example once.
+2. You must assume there is a class called {class_name} with the specified method under test.
+3. You must assume the given method is not static, hence must instantiate an object of the type MyClass first, use the default constructor.
+4. You must **add only one new unit test** for the method {method_signature}.
+5. You must import org.junit.jupiter.api.Assertions and org.junit.jupiter.api.DisplayName.
+6. **Preserve all existing tests** if they are already correctly implemented.
+7. The name of each test method must be **explicit and descriptive**, clearly indicating:
+   - The **behavior being tested**
+   Example: for a method called `isValidEmail`, tests should be named like:
+   `testValidStandardEmail()`, `testInvalidEmptyString()`, etc.
+8. Before adding any new test, you must evaluate whether the CURRENT CLASS TEST already provides 
+   sufficient coverage for the method '{method_signature}'.
+
+   To decide this, apply the following criteria:
+   - Look only at tests that explicitly target this method (based on their test method names or content).
+   - If **in your own evaluation** the existing tests already cover the meaningful input cases, edge cases, 
+     exceptional behavior, or expected variants of the method's logic, then consider the method as 
+     adequately tested.
+
+   If your evaluation concludes that the method is already adequately tested:
+      You must save the current test file unchanged using the tool write_file_truncate, the input must be in the format: '{file_path}|||<complete code here>'
+      Then, provide the final report:
+           Final answer: There are already ✅ enough tests for this method. No new test added.
+       Never execute another Action after that.
+
+   Otherwise, proceed to rule 9 and add exactly one meaningful new test.
+
+9. **Save** the code you generated using the tool write_file_truncate only once, the input must be in the format: '{file_path}|||<complete code here>' The file must contain only the code for the test class you generated, don't include comments.
+10. Immediately after you must produce a final report of the result of saving the code.

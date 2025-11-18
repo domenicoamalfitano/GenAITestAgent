@@ -19,12 +19,11 @@ See the License for the specific language governing permissions
 and limitations under the License.
 """
 
-# from langchain_ollama import OllamaLLM
 from langchain.agents import create_react_agent, AgentExecutor
 from langchain.tools import Tool
 from langchain.prompts import PromptTemplate
 from pathlib import Path
-import glob, os, time, subprocess, re
+import glob, os, time, subprocess
 from pathlib import Path
 from langchain_groq import ChatGroq
 
@@ -35,19 +34,23 @@ TEST_JAVA_DIR = JAVA_PROJECT_DIR / "src" / "test" / "java" / "com" / "example"
 SIGNATURES_DIR = BASE_DIR / "signatures"
 PROMPT_TEST = "PromptTest.txt"
 PROMPT_SOURCE = "PromptSource.txt"
+PROMPT_REFACTOR = "PromptRefactor.txt"
 MAX_TEST_RETRIES = 10
 MAX_SOURCE_RETRIES = 6
 GROQ_API_KEY = "GROQ_API_KEY"
-MODEL_LLM = "qwen/qwen3-32b"
+MODEL_LLM = "llama-3.3-70b-versatile"
 TEMPERATURE = 0.0
-MAX_ITERATIONS_TEST = 2
-MAX_ITERATIONS_SOURCE = 3
-
+MAX_ITERATIONS_TEST = 8
+MAX_ITERATIONS_SOURCE =  9
+MAX_ITERATIONS_REFACTOR = 8
+RESPONSE_TESTS_ENOUGH = "✅ enough tests"
+RESPONSE_ALL_TESTS_PASSED = "✅ All tests passed successfully."
+RESPONSE_REFACTORING_COMPLETE = "Refactoring complete"
 
 class AgentInvokeError(Exception): # exception of the agent invoke
     pass
 
-    
+
 def write_file_truncate(input_str: str) -> str:
     try:
         separator = '|||'
@@ -92,7 +95,6 @@ def run_maven_test(input_str: str = "") -> str:
         for line in output.splitlines():
             if summary_line in line:
                 test_summary = line.strip()
-            # if line.strip().startswith("Tests in error:") or line.strip().sta
         if not test_summary:
             test_summary = "Nessun riepilogo dei test trovato nell'output di Maven."
         if "BUILD SUCCESS" in output:
@@ -176,9 +178,12 @@ def return_template_for_test_or_code(typeTemplate: str)-> PromptTemplate:
 
 def load_llm():
     try:
-        # llm = OllamaLLM(model="llama3", temperature=0.0)
-        llm =ChatGroq(model=MODEL_LLM, api_key=os.environ.get(GROQ_API_KEY), temperature=TEMPERATURE)
-        print("✅ Modello LLM caricato correttamente.")
+        llm =ChatGroq(
+            model=MODEL_LLM, 
+            api_key=os.environ.get(GROQ_API_KEY), 
+            temperature=TEMPERATURE
+        )
+        print(f"✅ Il modello LLM {MODEL_LLM} è stato caricato correttamente.")
         return llm
     except Exception as e:
         raise RuntimeError(f"❌ Errore nel caricare il modello: {e}")
@@ -228,41 +233,53 @@ def read_signatures(sig_file):
     return methods
 
 # generation of tests and source for a method, (TDD)
-def process_method(method_signature, method_description, class_name, files_path_source, agent_executor_test, agent_executor_source):
+def process_method(method_signature, method_description, class_name, files_path_source, agent_executor_test, agent_executor_source, agent_executor_refactor):
     result_test = ""
     attempt = 0
     test_file = str(TEST_JAVA_DIR / f"{class_name}Test.java")
     source_file = str(MAIN_JAVA_DIR / f"{class_name}.java")
-    print(f"Generation tests/source for {method_signature}\n")
+    print(f"Start TDD iteration for {method_signature}\n")
     
-    while "✅ enough tests" not in result_test and attempt < MAX_TEST_RETRIES:
+    while RESPONSE_TESTS_ENOUGH not in result_test and attempt < MAX_TEST_RETRIES:
         # generate a single test for the method
         
-        print("Generating test...")
+        print("RED PHASE...")
+        # RED PHASE: generate a failed test
         result_test = generate_tests_or_source_for_method(method_signature, method_description, class_name, test_file, PROMPT_TEST, agent_executor_test)
-        print(f"Test generation result:\n{result_test[:200]}\n")
+        print(f"Test generation result:\n{result_test[:300]}\n")
         
-        # generate/update source code until all tests pass.
+        # GREEN PHASE: generate/update source code until all tests pass.
         attempt_source = 0
         result_source = ""
-        while "✅ All tests passed successfully." not in result_source and attempt_source < MAX_SOURCE_RETRIES:
-            print(f"Source fix...")
+        while RESPONSE_ALL_TESTS_PASSED not in result_source and attempt_source < MAX_SOURCE_RETRIES:
+            print(f"GREEN PHASE...")
+            # GREEN phase: generate/fix source code
             result_source = generate_tests_or_source_for_method(method_signature, method_description, class_name, source_file, PROMPT_SOURCE, agent_executor_source, files_path_source)
             attempt_source += 1
             time.sleep(0.3)
-                    
+
+        # REFACTOR PHASE: improve code structure
+        attempt_refactor = 0
+        result_refactor = ""
+        while (RESPONSE_ALL_TESTS_PASSED not in result_refactor or RESPONSE_REFACTORING_COMPLETE not in result_refactor) and attempt_refactor < MAX_SOURCE_RETRIES:
+            print(f"REFACTOR PHASE...")
+            result_refactor = generate_tests_or_source_for_method(method_signature, method_description, class_name, source_file, PROMPT_REFACTOR, agent_executor_refactor, files_path_source)
+            attempt_refactor += 1
+            time.sleep(0.3)
+
+
         attempt += 1
         time.sleep(0.3)
 
 # function to generate tests for a method or methods for source code
 def generate_tests_or_source_for_method(method_signature: str, method_description: str, className: str, file_path: str, promptFile: str, agent_executor: AgentExecutor, files_path_source: str = "") -> str:
 
-    tests = ""
+    tests = "No tests"
     if (TEST_JAVA_DIR / f"{className}Test.java").exists():
         with open(TEST_JAVA_DIR / f"{className}Test.java","r",encoding="utf-8") as f:
             tests = f.read()
         
-    source = ""
+    source = "No source"
     if (MAIN_JAVA_DIR / f"{className}.java").exists():
         with open(MAIN_JAVA_DIR / f"{className}.java", "r", encoding="utf-8") as f:
             source = f.read()
@@ -284,15 +301,7 @@ if __name__ == "__main__":
     TEST_JAVA_DIR.mkdir(parents=True, exist_ok=True)
     MAIN_JAVA_DIR.mkdir(parents=True, exist_ok=True)
     
-    tools_test = [
-        Tool(
-            name="write_file_truncate",
-            func=write_file_truncate,
-            description="Salva codice in un file. Formato: 'percorso_file|||contenuto_codice'"
-        )
-    ]
-
-    tools_source = [
+    tools = [
         Tool(
             name="write_file_truncate",
             func=write_file_truncate,
@@ -305,16 +314,15 @@ if __name__ == "__main__":
         )
     ]
 
-    llm = load_llm()
-
     prompt_test = return_template_for_test_or_code("test")
     prompt_source = return_template_for_test_or_code("source")
-
     print("✅ Prompt template creato")
     
-    agent_executor_test = create_agent_executor(llm, tools_test, prompt_test, MAX_ITERATIONS_TEST)
-    agent_executor_source = create_agent_executor(llm, tools_source, prompt_source, MAX_ITERATIONS_SOURCE)
-
+    llm = load_llm()
+    
+    agent_executor_test = create_agent_executor(llm, tools, prompt_test, MAX_ITERATIONS_TEST)
+    agent_executor_source = create_agent_executor(llm, tools, prompt_source, MAX_ITERATIONS_SOURCE)
+    agent_executor_refactor = create_agent_executor(llm, tools, prompt_source, MAX_ITERATIONS_REFACTOR)
 
     print("🚀 Avvio generazione test automatica...")
     # read all signature files
@@ -326,9 +334,9 @@ if __name__ == "__main__":
         class_name = Path(sig_file).stem
         # open signature file and read method signatures with optional description
         
-        for method_signature, method_description in methods:     
+        for method_signature, method_description in methods:
             try:
-                process_method(method_signature, method_description, class_name, files_path_source, agent_executor_test, agent_executor_source)
+                process_method(method_signature, method_description, class_name, files_path_source, agent_executor_test, agent_executor_source, agent_executor_refactor)
             except AgentInvokeError as e:
                 print(e)
             

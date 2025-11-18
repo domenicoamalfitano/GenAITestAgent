@@ -1,0 +1,95 @@
+The goal is to apply one significant refactoring operation to the java source code provided and verify that ALL existing tests still pass.
+This ensures no regression is introduced.
+
+You are given:
+- PATH OF THE SOURCE FILE: '{file_path}'
+
+- ALL CLASS PATH OF THE SOURCE FILES: '{files_path_source}'
+
+
+- SOURCE CODE TO REFACTOR:
+{source}
+
+- TESTS OF THE CLASS (for verification, DO NOT MODIFY):
+{tests}
+
+---
+
+### TOOL USAGE:
+
+You have access to the following tools:
+
+1. **write_file_truncate**
+   - Use this tool to save your complete Java source code.
+   - It must be used exactly once per iteration.
+   -remember to format the java source code.
+   - Input format:'{file_path}|||<complete modified java source code>'
+   - You can use one write_file_truncate for one of the all class PATH given.
+
+2. **run_maven_test**
+   - Use this tool to run all Maven tests in the project.
+   - It returns the test results, including which tests failed and their error messages.
+
+---
+
+### TASK:
+
+1. Safety First: The primary goal is to improve code structure, readability, and maintainability WITHOUT changing its external behavior.
+2. One change: Focus on ONE clear refactoring (e.g. Extract Method, Rename Variable) per attempt.
+3. Max Attempts: You have a maximum of 3 attempts to successfully refactor the code and pass all tests.
+4. Don't change the name of the class and the name of the public methods.
+5. **Rules of Refactoring:
+  - **Extract method**: when the methods are too long or duplicate code.
+    Do NOT extract a method when the code block is short, trivial, or only used once.
+  - **Rename Variable**: when the name of a variable is not self-explanatory, rename it **only if it is not a standard algorithmic variable**.
+    Do NOT rename variables commonly used as loop indices or counters in algorithms: i, j, k, n, m, len, size, count.
+    Only rename variables when it clearly improves readability without altering behavior.
+  - **Simplify conditional/loop**: when the conditional can be more readable without changing behavior.
+  - **Inline method/variable**: When the method or variable is trivial (e.g. return a constant or performs a single simple assignment).
+    Do not inline methods or variables with complex logic unless it is clearly redundant.
+  - **Replace magic numbers**: When it improves readability without changing behavior.
+    Do not replace numbers that are self-explanatory (e.g. 0 for a starting index, 1 for increment).
+
+### AGENT WORKFLOW:
+
+You must follow these steps scrupulously:
+
+**Step 1: Analyze and apply One Refactoring**
+    - Store the current source code as the "last known good version." This is your safety checkpoint.
+
+    - Analyze the source code and identify ONE SINGLE refactoring opportunity (e.g., "Extract Method," "Rename Variable for clarity," "Remove duplicate if block," "Simplify a loop").
+    - If there are not refactoring opportunity:
+      - Print exactly the following Final answer: Refactoring complete, code is clean. ✅ All tests passed successfully.
+      - Never execute another Action after that.
+    - Do not try to do too much at once. Pick the smallest, most sensible change.
+    - If you find NO obvious refactoring opportunities, stop and report "Refactoring complete, code is clean."
+
+    - Modify the source code (in memory) to apply the identified refactoring.
+    - Execute write_file_truncate(input='{file_path}|||<complete modified code>').
+
+**Step 2: Run Tests**
+    - Execute run_maven_test() to verify that all existing tests still pass.
+
+**Step 3: Evaluate the Result**
+    If all tests pass:
+      - The refactoring is successful.
+      - Proceed to Step 4.
+    
+    If tests FAIL:
+      - Analyze the errors.      
+      - If it can be safely corrected without changing behavior, adjust and retry (up to 3 times).
+      - If tests still fail after 3 attempts, restore the previous working code using 
+        `write_file_truncate('{file_path}|||<code from the previous working version>')`
+        and terminate, communicating that rollback was done.
+
+**Step 4: Continue Refactoring**
+    - Re-analyze the updated source code.
+    - If you detect another clear refactoring opportunity, repeat Steps 1–3.
+    - Continue until the code is clean and no further safe refactoring can be made.
+    - When no more changes are needed, provide the final report:
+      Final answer: Refactoring complete, code is clean. ✅ All tests passed successfully.
+      Never execute another Action after that.
+
+---
+
+At every point, ensure that all tests pass before proceeding to the next refactoring.
