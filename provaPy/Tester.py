@@ -35,29 +35,34 @@ SIGNATURES_DIR = BASE_DIR / "signatures"
 PROMPT_TEST = "PromptTest.txt"
 PROMPT_SOURCE = "PromptSource.txt"
 PROMPT_REFACTOR = "PromptRefactor.txt"
-MAX_TEST_RETRIES = 10
-MAX_SOURCE_RETRIES = 6
+MAX_RETRIES = 6
 GROQ_API_KEY = "GROQ_API_KEY"
-MODEL_LLM = "llama-3.3-70b-versatile"
+MODEL_LLM = "qwen/qwen3-32b"
 TEMPERATURE = 0.0
-MAX_ITERATIONS_TEST = 8
-MAX_ITERATIONS_SOURCE =  9
-MAX_ITERATIONS_REFACTOR = 8
+MAX_ITERATIONS = 12
 RESPONSE_TESTS_ENOUGH = "✅ enough tests"
 RESPONSE_ALL_TESTS_PASSED = "✅ All tests passed successfully."
 RESPONSE_REFACTORING_COMPLETE = "Refactoring complete"
+SEPARATOR = "|||"
 
 class AgentInvokeError(Exception): # exception of the agent invoke
     pass
 
+def read_file(input_str: str) -> str:
+    try:
+        input_str = "".join(input_str.split())
+        with open(input_str, "r", encoding='utf-8') as f:
+            content = f.read()
+        return content
+    except Exception as e:
+        return f"Errore nel leggere il file: {str(e)}"
 
 def write_file_truncate(input_str: str) -> str:
     try:
-        separator = '|||'
-        if separator not in input_str:
-            return f"Errore: il formato non è corretto, non è stato trovato il separatore '{separator}'."
+        if SEPARATOR not in input_str:
+            return f"Errore: il formato non è corretto, non è stato trovato il separatore '{SEPARATOR}'."
 
-        file_path, code = input_str.split(separator, 1)
+        file_path, code = input_str.split(SEPARATOR, 1)
         path = Path(file_path.strip().strip("'").strip('"')).resolve()
         code = code.strip().rstrip("'").rstrip('"').replace("```","").replace("<complete code here>","").strip()
 
@@ -240,18 +245,19 @@ def process_method(method_signature, method_description, class_name, files_path_
     source_file = str(MAIN_JAVA_DIR / f"{class_name}.java")
     print(f"Start TDD iteration for {method_signature}\n")
     
-    while RESPONSE_TESTS_ENOUGH not in result_test and attempt < MAX_TEST_RETRIES:
+    while RESPONSE_TESTS_ENOUGH not in result_test and attempt < MAX_RETRIES:
         # generate a single test for the method
         
         print("RED PHASE...")
         # RED PHASE: generate a failed test
         result_test = generate_tests_or_source_for_method(method_signature, method_description, class_name, test_file, PROMPT_TEST, agent_executor_test)
         print(f"Test generation result:\n{result_test[:300]}\n")
-        
+        if RESPONSE_TESTS_ENOUGH in result_test:
+            continue
         # GREEN PHASE: generate/update source code until all tests pass.
         attempt_source = 0
         result_source = ""
-        while RESPONSE_ALL_TESTS_PASSED not in result_source and attempt_source < MAX_SOURCE_RETRIES:
+        while RESPONSE_ALL_TESTS_PASSED not in result_source and attempt_source < MAX_RETRIES:
             print(f"GREEN PHASE...")
             # GREEN phase: generate/fix source code
             result_source = generate_tests_or_source_for_method(method_signature, method_description, class_name, source_file, PROMPT_SOURCE, agent_executor_source, files_path_source)
@@ -261,7 +267,7 @@ def process_method(method_signature, method_description, class_name, files_path_
         # REFACTOR PHASE: improve code structure
         attempt_refactor = 0
         result_refactor = ""
-        while (RESPONSE_ALL_TESTS_PASSED not in result_refactor or RESPONSE_REFACTORING_COMPLETE not in result_refactor) and attempt_refactor < MAX_SOURCE_RETRIES:
+        while (RESPONSE_ALL_TESTS_PASSED not in result_refactor or RESPONSE_REFACTORING_COMPLETE not in result_refactor) and attempt_refactor < MAX_RETRIES:
             print(f"REFACTOR PHASE...")
             result_refactor = generate_tests_or_source_for_method(method_signature, method_description, class_name, source_file, PROMPT_REFACTOR, agent_executor_refactor, files_path_source)
             attempt_refactor += 1
@@ -311,8 +317,14 @@ if __name__ == "__main__":
             name="run_maven_test",
             func=run_maven_test,
             description="Esegue i test JUnit in un progetto Maven e restituisce un riepilogo."
+        ),
+        Tool(
+            name="read_file",
+            func=read_file,
+            description="Legge il contenuto di un file specificato."
         )
     ]
+    tools_RED = tools[:2]
 
     prompt_test = return_template_for_test_or_code("test")
     prompt_source = return_template_for_test_or_code("source")
@@ -320,9 +332,9 @@ if __name__ == "__main__":
     
     llm = load_llm()
     
-    agent_executor_test = create_agent_executor(llm, tools, prompt_test, MAX_ITERATIONS_TEST)
-    agent_executor_source = create_agent_executor(llm, tools, prompt_source, MAX_ITERATIONS_SOURCE)
-    agent_executor_refactor = create_agent_executor(llm, tools, prompt_source, MAX_ITERATIONS_REFACTOR)
+    agent_executor_test = create_agent_executor(llm, tools_RED, prompt_test, MAX_ITERATIONS)
+    agent_executor_source = create_agent_executor(llm, tools, prompt_source, MAX_ITERATIONS)
+    agent_executor_refactor = create_agent_executor(llm, tools, prompt_source, MAX_ITERATIONS)
 
     print("🚀 Avvio generazione test automatica...")
     # read all signature files
@@ -340,3 +352,4 @@ if __name__ == "__main__":
             except AgentInvokeError as e:
                 print(e)
             
+    print("✅ TDD completed.")

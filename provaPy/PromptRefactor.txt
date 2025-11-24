@@ -25,10 +25,22 @@ You have access to the following tools:
    -remember to format the java source code.
    - Input format:'{file_path}|||<complete modified java source code>'
    - You can use one write_file_truncate for one of the all class PATH given.
+   - You can use this tool to write a file class tests, you must change the input path using "src/test/java/com/example/<className>Test.java" path.
+   - You **MUST NOT** change the behavior of tests file, you can use this tool for file test only for correct tests that have outdated method name, parameter list, or field reference.
+
 
 2. **run_maven_test**
    - Use this tool to run all Maven tests in the project.
    - It returns the test results, including which tests failed and their error messages.
+
+3. **read_file**
+   - Use this tool to read a file from src/main/java/example
+   - The file_path must be a clean string with no trailing spaces, no newline characters, and no escape sequences.
+   - Example:
+      Input format: '{file_path}'
+   - You can use this tool for any specified source file.
+   - In the prompt is specified the content of the file '{file_path}', so try not to use the tool read_file for this.
+   - It returns the content of the specified file.
 
 ---
 
@@ -37,24 +49,34 @@ You have access to the following tools:
 1. Safety First: The primary goal is to improve code structure, readability, and maintainability WITHOUT changing its external behavior.
 2. One change: Focus on ONE clear refactoring (e.g. Extract Method, Rename Variable) per attempt.
 3. Max Attempts: You have a maximum of 3 attempts to successfully refactor the code and pass all tests.
-4. Don't change the name of the class and the name of the public methods.
+4. Don't change the name of the class and don't change the name of the public methods.
+5. Don't delete the public methods.
 5. **Rules of Refactoring:
-  - **Extract method**: when the methods are too long or duplicate code.
+  - **Extract method**: When the methods are too long or duplicate code.
     Do NOT extract a method when the code block is short, trivial, or only used once.
-  - **Rename Variable**: when the name of a variable is not self-explanatory, rename it **only if it is not a standard algorithmic variable**.
+  - **Rename variable/method**:Rename only if it significantly improves readability, rename it **only if it is not a standard algorithmic variable**.
     Do NOT rename variables commonly used as loop indices or counters in algorithms: i, j, k, n, m, len, size, count.
-    Only rename variables when it clearly improves readability without altering behavior.
-  - **Simplify conditional/loop**: when the conditional can be more readable without changing behavior.
+    Only rename variables/methods when it clearly improves readability without altering behavior.
+  - **Simplify conditional/loop**: When the conditional can be more readable without changing behavior.
   - **Inline method/variable**: When the method or variable is trivial (e.g. return a constant or performs a single simple assignment).
     Do not inline methods or variables with complex logic unless it is clearly redundant.
   - **Replace magic numbers**: When it improves readability without changing behavior.
     Do not replace numbers that are self-explanatory (e.g. 0 for a starting index, 1 for increment).
+  - **Remove duplicate methods using generic type**: When multiple methods differ only in their return type or the parameters type and share identical logic, consider to create a generic method.
+    Do not apply this refactor if the methods are trivial getter/setter without additional logic.
+    It is applicable if the repeted logic is significant (e.g. validations, transformations, calculations).
+6. If a test fails because it calls a method or accesses a variable that was removed or modified in the source code, you may:
+   - Identified that the test failure is due to an outdated method name, parameter list, or field reference.
+   - Update only the test calls (method name, parameters, or field accesses) to match the current source code.
+   - Do not change the behavior of test.
+   - Use write_file_truncate to save the corrected test file.
 
 ### AGENT WORKFLOW:
 
 You must follow these steps scrupulously:
 
 **Step 1: Analyze and apply One Refactoring**
+    - Read the sources file you prefer.
     - Store the current source code as the "last known good version." This is your safety checkpoint.
 
     - Analyze the source code and identify ONE SINGLE refactoring opportunity (e.g., "Extract Method," "Rename Variable for clarity," "Remove duplicate if block," "Simplify a loop").
@@ -76,7 +98,10 @@ You must follow these steps scrupulously:
       - Proceed to Step 4.
     
     If tests FAIL:
-      - Analyze the errors.      
+      - Analyze the errors.
+      - If the failure is likely caused by renamed methods or variables:
+        Check the test files for calls to the renamed methods/variables.
+        Update the test files to use the new names accordingly using the tool write_file_truncate, don't use the input '{file_path}' but change it using "src/test/java/com/example/<class name>Test.java"
       - If it can be safely corrected without changing behavior, adjust and retry (up to 3 times).
       - If tests still fail after 3 attempts, restore the previous working code using 
         `write_file_truncate('{file_path}|||<code from the previous working version>')`

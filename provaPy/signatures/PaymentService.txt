@@ -1,0 +1,4 @@
+# constructor that initializes a PaymentService object with the specified gateway, PaymentGateway is a interface
+PaymentService(PaymentGateway gateway)
+# Processes a payment using the configured payment gateway and returns the transaction result, for the transaction, uses the method boolean charge(String accountId, double amount) of interface PaymentGateway.
+boolean processPayment(String accountId, double amount)

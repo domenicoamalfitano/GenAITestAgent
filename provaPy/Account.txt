@@ -10,11 +10,11 @@ Euro getAvailableBalance()
 #Returns the total balance, which includes both available funds and pending deposits
 Euro getTotalBalance()
 
+#Returns the unique account number associated with this account
+int getAccountNumber()
+
 #Adds the specified amount to the total balance of the account
 void credit(Euro amount)
 
 #Subtracts the specified amount from both the available balance and the total balance of the account
 void debit(Euro amount)
-
-#Returns the unique account number associated with this account
-int getAccountNumber()
