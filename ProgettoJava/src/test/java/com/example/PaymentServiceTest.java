@@ -54,4 +54,14 @@ public class PaymentServiceTest {
         verify(mockGateway).charge("acc123", 50.0);
     }
 
+    @Test
+    @DisplayName("processPayment should throw IllegalArgumentException when accountId is null")
+    void processPaymentShouldThrowExceptionWhenAccountIdIsNull() {
+        PaymentGateway mockGateway = mock(PaymentGateway.class);
+        PaymentService service = new PaymentService(mockGateway);
+        assertThrows(IllegalArgumentException.class, () -> {
+            service.processPayment(null, 50.0);
+        });
+    }
+
 }
