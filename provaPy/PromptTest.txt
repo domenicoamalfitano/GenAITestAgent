@@ -9,7 +9,7 @@ CURRENT CLASS TEST:
 
 ***
 
-### 🛠️ TOOLS AVAILABLE:
+### TOOL USAGE:
 You have access to the following tools:
 
 1. **write_file_truncate**
@@ -17,7 +17,6 @@ You have access to the following tools:
    - It must be used exactly once per iteration.
    -remember to format the java source code.
    - Input format:'{file_path}|||<complete modified java source code>'
-   - You can use one write_file_truncate for one of the all class PATH given.
 
 2. **run_maven_test**
    - Use this tool to run all Maven tests in the project.
@@ -25,7 +24,7 @@ You have access to the following tools:
 
 ---
 
-### 📜 TDD INSTRUCTIONS:
+### INSTRUCTIONS:
 
 1. **Test Class Structure:** You must write or update a Java test class called **{class_name}Test** in the package `com.example`.
 2. **Assumptions:** Assume there is a class called `{class_name}` with the specified method under test. The method is **not static**, so you must instantiate an object of the type `{class_name}` first, using the default constructor.
@@ -58,49 +57,44 @@ You have access to the following tools:
         import org.mockito.Mockito;
         import org.mockito.Mock;
         import org.mockito.MockitoAnnotations;
-13. You can write interfaces in a separate file.
+13. Do not re-add tests that were removed in previous iterations.
+
 ---
 
-### 🔁 AGENT WORKFLOW:
+### AGENT WORKFLOW:
 
 **Your task is to analyze the input and choose ONE of the two paths below.**
 
 #### PATH A: Tests are Sufficient
 
-* **Trigger:** You must *internally analyze* the test class and `{method_description}`. If your analysis concludes that the method is already adequately tested, you must choose this path.
-* **Action 1 (Thought):** Your thought process must explain *why* coverage is sufficient.
-* **Action 2 (Tool):** Call `write_file_truncate` saving the current test file unchanged.
-    * `Thought: I have analyzed the existing tests... [your reasoning here]... and I conclude they are sufficient. I will now save the file unchanged as per instructions.`
-    * `Action: write_file_truncate('{file_path}|||<complete code here>')`
-* **Action 3 (Final Answer):** After receiving the tool output for `write_file_truncate`, you MUST provide the final answer:
-    * `Thought: The file has been saved unchanged. The task is complete.`
-    * `Final Answer: There are already ✅ enough tests for this method. No new test added.`
+    * **Trigger:** You must *internally analyze* the test class and `{method_description}`. If your analysis concludes that the method is already adequately tested, you must choose this path.
+    - Your thought process must explain *why* coverage is sufficient.
+    - Call `write_file_truncate` saving the current test file unchanged, use this Input format:
+        '{file_path}|||<complete code here>'
+    - After using the tool `write_file_truncate`, you MUST provide the final answer:
+        `Final Answer: There are already ✅ enough tests for this method. No new test added.`
 
 #### PATH B: New Test is Needed (TDD Red Loop)
 
-* **Trigger:** If your *internal analysis* finds a meaningful behavior or edge case from `{method_description}` not covered by the **CURRENT CLASS TEST**, you must choose this path.
-* **Step B.1 (Write):**
-    * **Thought:** Your thought process must explain *what test is missing* and *why* it will fail.
-    * **Action:** Call `write_file_truncate` with the *new* test added (preserving all old tests).
-        * `Thought: I have analyzed the existing tests. The description mentions [feature X], but no test covers [scenario Y]. I will add a new failing test named '...'.`
-        * `Action: write_file_truncate('{file_path}|||<complete code with new test here>')`
+    * **Trigger:** If your *internal analysis* finds a meaningful behavior or edge case from `{method_description}` not covered by the **CURRENT CLASS TEST**, you must choose this path.
+    **Step B.1 (Write):**
+        - Your thought process must explain *what test is missing* and *why* it will fail.
+        - Use the tool `write_file_truncate` with the *new* test added (preserving all old tests), use this Input format:
+            '{file_path}|||<complete code with new test here>'
 
-* **Step B.2 (Run):**
-    * **Thought:** `Thought: The new test file has been written. I must now run the tests to verify it fails.`
-    * **Action:** `run_maven_test`
-
-* **Step B.3 (Analyze & Report):**
-    * **IF** the observation is **BUILD_FAIL** (test failed at runtime) **OR** the observation is a **COMPILATION_ERROR** due to a "cannot find symbol" error related to {class_name} or {method_signature}:
-        * **SUCCESS!** The test correctly failed because the functionality or method definition is missing.
-        * `Thought: The test run resulted in a clear failure (logical or definition error) as expected for the RED step. The process is ready to proceed.`
-        * `Final Answer: RED step successful. New failing test added to '{file_path}'. The process is ready for the GREEN (implementation) step.`
-    * **ELSE IF** the observation is **BUILD_SUCCESS**:
-        * This means the newly added test already passes.
-        * The agent must remove the newly added test by rewriting the file with its previous content.
-        * `Thought: The newly added test passed immediately, so it is unnecessary. I will remove it and conclude that enough tests already exist.`
-        * `Action: write_file_truncate('{file_path}|||<previous version of the test file (without the new test)>')`
-        * `Final Answer: There are already ✅ enough tests for this method. No new test added.`
-    * **ELSE IF** the observation is **COMPILATION_ERROR** due to syntax errors (e.g., missing semicolon, wrong import for Junit, type mismatch):
-        * **ERROR!** The test is trivial or syntactically broken. It must be corrected before the RED step can be completed.
-        * `Thought: The test is either passing or broken by a syntax error. I must correct the error or rewrite the test to ensure it fails for the right reason. I will analyze the error... [reasoning]... and write a revised test.`
-        * **Action:** `write_file_truncate('{file_path}|||<code with REVISED test here>')` (This returns the loop to Step B.1)
+    **Step B.2 (Run, Analyze and Report):**
+        - Use the tool `run_maven_test` to run the tests.
+        - **IF** the observation is **BUILD_FAIL** (test failed at runtime) **OR** the observation is a **COMPILATION_ERROR** due to a "cannot find symbol" error related to {class_name} or {method_signature}:
+            * **SUCCESS!** The test correctly failed because the functionality or method definition is missing, you MUST provide the final answer:
+                `Final Answer: RED step successful. New failing test added to '{file_path}'. The process is ready for the GREEN (implementation) step.`
+        - **ELSE IF** the observation is **BUILD_SUCCESS**:
+            * This means the newly added test already passes.
+            * The agent must remove the newly added test by rewriting the file with its previous content and you don't write this test in the future iterations, use the tool ' write_file_truncate' with this Input format:
+                '{file_path}|||<previous version of the test file (without the new test)>'
+            * You MUST provide the final answer:
+                `Final Answer: There are already ✅ enough tests for this method. No new test added.`
+        - **ELSE IF** the observation is **COMPILATION_ERROR** due to syntax errors (e.g., missing semicolon, wrong import for Junit, type mismatch):
+            * **ERROR!** The test is trivial or syntactically broken. It must be corrected before the RED step can be completed.
+            * You must use the tool 'write_file_truncate' with this input format:
+                '{file_path}|||<code with REVISED test here>'
+            * **You must to go back to the Step B.1**

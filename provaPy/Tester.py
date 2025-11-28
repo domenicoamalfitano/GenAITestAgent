@@ -37,9 +37,9 @@ PROMPT_SOURCE = "PromptSource.txt"
 PROMPT_REFACTOR = "PromptRefactor.txt"
 MAX_RETRIES = 6
 GROQ_API_KEY = "GROQ_API_KEY"
-MODEL_LLM = "qwen/qwen3-32b"
+MODEL_LLM = "moonshotai/kimi-k2-instruct"
 TEMPERATURE = 0.0
-MAX_ITERATIONS = 12
+MAX_ITERATIONS = 14
 RESPONSE_TESTS_ENOUGH = "✅ enough tests"
 RESPONSE_ALL_TESTS_PASSED = "✅ All tests passed successfully."
 RESPONSE_REFACTORING_COMPLETE = "Refactoring complete"
@@ -157,7 +157,7 @@ def return_template_for_test_or_code(typeTemplate: str)-> PromptTemplate:
     (Wait for the observation before continuing. Never repeat the same Action twice unless explicitly required.)
     Thought:
     If all required actions have been completed, provide your Final Answer:
-    Final Answer:
+    Final Answer: the final answer with no extra text.
 
 
 ⚠️ IMPORTANT - STRICT RULES:
@@ -169,11 +169,6 @@ def return_template_for_test_or_code(typeTemplate: str)-> PromptTemplate:
     5. Never enclose file paths or code inside quotes. Do not start or end Action Input with ' or ".
 
 
-
-
-
-
-    Start!
 
     Question: {{input}}
     {{agent_scratchpad}}
@@ -251,7 +246,6 @@ def process_method(method_signature, method_description, class_name, files_path_
         print("RED PHASE...")
         # RED PHASE: generate a failed test
         result_test = generate_tests_or_source_for_method(method_signature, method_description, class_name, test_file, PROMPT_TEST, agent_executor_test)
-        print(f"Test generation result:\n{result_test[:300]}\n")
         if RESPONSE_TESTS_ENOUGH in result_test:
             continue
         # GREEN PHASE: generate/update source code until all tests pass.
