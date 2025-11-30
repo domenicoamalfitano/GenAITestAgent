@@ -5,5 +5,5 @@ University of Naples Federico II
 This project was developed as part of a bachelor’s thesis in Computer Engineering
 at the University of Naples Federico II, under the supervision of Prof. Domenico Amalfitano.
 
-The software uses LangChain, Ollama, and Maven as dependencies,
+The software uses LangChain, langchain-groq, and Maven as dependencies,
 each covered by their respective licenses.
