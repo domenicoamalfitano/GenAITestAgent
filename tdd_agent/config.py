@@ -1,7 +1,7 @@
 from pathlib import Path
 
 BASE_DIR = Path(__file__).parent.resolve()
-JAVA_PROJECT_DIR = BASE_DIR.parent / "workspace-java"
+JAVA_PROJECT_DIR = BASE_DIR.parent / "JavaProject"
 MAIN_JAVA_DIR = JAVA_PROJECT_DIR / "src" / "main" / "java" / "com" / "example"
 TEST_JAVA_DIR = JAVA_PROJECT_DIR / "src" / "test" / "java" / "com" / "example"
 SIGNATURES_DIR = BASE_DIR / "signatures"

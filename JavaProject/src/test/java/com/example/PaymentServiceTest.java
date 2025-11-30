@@ -34,6 +34,16 @@ public class PaymentServiceTest {
     }
 
     @Test
+    @DisplayName("processPayment should throw IllegalArgumentException when amount is negative")
+    void processPaymentShouldThrowExceptionWhenAmountIsNegative() {
+        PaymentGateway mockGateway = mock(PaymentGateway.class);
+        PaymentService service = new PaymentService(mockGateway);
+        assertThrows(IllegalArgumentException.class, () -> {
+            service.processPayment("account123", -10.0);
+        });
+    }
+
+    @Test
     @DisplayName("processPayment should return false when PaymentGateway charge returns false")
     void processPaymentShouldReturnFalseWhenGatewayChargeReturnsFalse() {
         PaymentGateway mockGateway = mock(PaymentGateway.class);
