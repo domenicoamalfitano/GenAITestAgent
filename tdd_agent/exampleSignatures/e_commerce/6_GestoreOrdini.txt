@@ -1,0 +1,15 @@
+#Adds a new order to the system
+
+void aggiungiOrdine(Ordine ordine)
+
+#Returns all unpaid orders
+
+List<Ordine> ordiniNonPagati()
+
+#Finds and returns an order by customer ID (first match, or null)
+
+Ordine cercaOrdinePerCliente(String idCliente)
+
+#Returns a formatted list of all orders in the system
+
+String stampaOrdini()

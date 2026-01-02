@@ -1,4 +1,0 @@
-# metodo che calcola a + b
-# dopodiche deve fare il risultato motliplicato per 2
-# dopodiche deve fare il risultato + 5
-int calc(int a, int b)

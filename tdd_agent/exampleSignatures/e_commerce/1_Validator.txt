@@ -1,0 +1,10 @@
+#Returns true if a price is positive
+
+boolean isValidPrice(double price)
+
+#Returns true if a quantity is ≥ 1
+
+boolean isValidQuantity(int amount)
+
+#Returns true if a customer ID is not empty
+boolean isClientIdValid(String clientId)

@@ -1,0 +1,8 @@
+#Returns true if the provided string is not null and not empty
+boolean isNotEmpty(String s)
+
+#Returns true if the phone number contains only digits
+boolean isPhoneValid(String number)
+
+#Returns true if the email has a valid format (simplified validation)
+boolean isEmailValid(String email)

@@ -1,0 +1,15 @@
+# create a new client that it connects to the specified server.
+# the class have this fields:
+# String ipServer, int portaServer, Socket socket, BufferedReader in, PrintWriter out
+ChatClient(String ipServer, int portaServer)
+# start the connection:
+# connect to the server using Socket with ip and port.
+# ask the nickname and send it to the server.
+# listen the messages from the server
+# allows to the user to send commands and messages
+# if the user send the command /quit, close the socket and stream.
+void start()
+# Thread for received messages from server.
+void ascoltaMessaggi()
+# send a text to the server (commands or messages)
+void inviaMessaggio(String testo)

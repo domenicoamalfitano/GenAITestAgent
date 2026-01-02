@@ -1,4 +1,6 @@
-The goal is to generate a single new unit test that **FAILS** (Red step of TDD) for a Java Maven project and, if successful, produce a final report.
+The goal is to generate a single meaningful new unit test that **FAILS** (Red step of TDD) for a Java Maven project and, if successful, produce a final report.
+
+You MUST call a tool.
 
 You are given:
 METHOD UNDER TEST '{method_signature}'
@@ -13,10 +15,13 @@ CURRENT CLASS TEST:
 You have access to the following tools:
 
 1. **write_file_truncate**
-   - Use this tool to save your complete Java source code.
-   - It must be used exactly once per iteration.
-   -remember to format the java source code.
-   - Input format:'{file_path}|||<complete modified java source code>'
+   - Use this tool to save your complete and formatted Java source code.
+   - Use the JSON format.
+   - The 'file_path' MUST be a string enclosed in double quotes.
+   - Input format: {{
+                    "file_path": "{file_path}",
+                    "content": "code_content"
+                    }}
 
 2. **run_maven_test**
    - Use this tool to run all Maven tests in the project.
@@ -41,17 +46,6 @@ You have access to the following tools:
     - Verify that each constructor parameter is correctly assigned by calling the corresponding getters using "assertEquals".
 11. Don't write tests without Assertion.
 12. Use Mockito only when the method under test depends on an external collaborator (another class, interface, service, repository, or gateway) whose real behavior should not be executed during the test.
-    - This includes cases where the dependency:
-        performs I/O (database, file system, network, etc.),
-        contains non-deterministic behavior (random, time-based, external state),
-        is expensive or slow to execute,
-        triggers side effects that must not run during unit tests,
-        is irrelevant to the logic being tested and should be simulated.
-    - Do NOT use Mockito when:
-        the class has no external dependencies,
-        the logic is fully internal and deterministic,
-        a simple dummy object or real instance is enough,
-        the test only verifies getters, setters, constructors, or pure functions.
     - If you want to use Mockito, you can add this imports, if necessary:
         import static org.mockito.Mockito.*;
         import org.mockito.Mockito;
@@ -69,9 +63,8 @@ You have access to the following tools:
 
     * **Trigger:** You must *internally analyze* the test class and `{method_description}`. If your analysis concludes that the method is already adequately tested, you must choose this path.
     - Your thought process must explain *why* coverage is sufficient.
-    - Call `write_file_truncate` saving the current test file unchanged, use this Input format:
-        '{file_path}|||<complete code here>'
-    - After using the tool `write_file_truncate`, you MUST provide the final answer:
+    - Call `write_file_truncate` saving the current test file unchanged.
+    - After using the tool `write_file_truncate`, you MUST immediately return:
         `Final Answer: There are already ✅ enough tests for this method. No new test added.`
 
 #### PATH B: New Test is Needed (TDD Red Loop)
@@ -79,22 +72,19 @@ You have access to the following tools:
     * **Trigger:** If your *internal analysis* finds a meaningful behavior or edge case from `{method_description}` not covered by the **CURRENT CLASS TEST**, you must choose this path.
     **Step B.1 (Write):**
         - Your thought process must explain *what test is missing* and *why* it will fail.
-        - Use the tool `write_file_truncate` with the *new* test added (preserving all old tests), use this Input format:
-            '{file_path}|||<complete code with new test here>'
+        - Use the tool `write_file_truncate` with the *new* test added (preserving all old tests).
 
     **Step B.2 (Run, Analyze and Report):**
         - Use the tool `run_maven_test` to run the tests.
         - **IF** the observation is **BUILD_FAIL** (test failed at runtime) **OR** the observation is a **COMPILATION_ERROR** due to a "cannot find symbol" error related to {class_name} or {method_signature}:
-            * **SUCCESS!** The test correctly failed because the functionality or method definition is missing, you MUST provide the final answer:
+            * **SUCCESS!** The test correctly failed because the functionality or method definition is missing, you MUST immediately return:
                 `Final Answer: RED step successful. New failing test added to '{file_path}'. The process is ready for the GREEN (implementation) step.`
         - **ELSE IF** the observation is **BUILD_SUCCESS**:
             * This means the newly added test already passes.
-            * The agent must remove the newly added test by rewriting the file with its previous content and you don't write this test in the future iterations, use the tool ' write_file_truncate' with this Input format:
-                '{file_path}|||<previous version of the test file (without the new test)>'
-            * You MUST provide the final answer:
+            * The agent must remove the newly added test by rewriting the file with its previous content and you don't write this test in the future iterations, use the tool ' write_file_truncate'.
+            * You MUST immediately return:
                 `Final Answer: There are already ✅ enough tests for this method. No new test added.`
         - **ELSE IF** the observation is **COMPILATION_ERROR** due to syntax errors (e.g., missing semicolon, wrong import for Junit, type mismatch):
             * **ERROR!** The test is trivial or syntactically broken. It must be corrected before the RED step can be completed.
-            * You must use the tool 'write_file_truncate' with this input format:
-                '{file_path}|||<code with REVISED test here>'
+            * You must use the tool 'write_file_truncate'.
             * **You must to go back to the Step B.1**

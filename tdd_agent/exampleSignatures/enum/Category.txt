@@ -1,0 +1,4 @@
+# this is an enum with this variables:
+# HORROR, ACTION, FANTASY, THRILLER, ADVENTURE, COMEDY, NOIR, WESTERN, OTHER
+# create a simple test to verify the variables.
+No methods

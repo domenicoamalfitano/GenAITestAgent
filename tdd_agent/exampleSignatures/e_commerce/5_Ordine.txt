@@ -1,0 +1,15 @@
+#Initializes an order for a customer with cart and payment method, the orders should have an orderID.
+
+Ordine(String idCliente, Carrello carrello, MetodoPagamento pagamento)
+
+#Marks the order as paid
+
+void paga()
+
+#Returns true if the order has been paid
+
+boolean isPagato()
+
+#Returns a string summary of the order
+
+String toString()

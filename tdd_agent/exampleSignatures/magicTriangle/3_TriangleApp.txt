@@ -1,0 +1,2 @@
+Starts the application, reads user input, parses triangle sides, and prints the triangle type or an error message
+static void main(String[] args)

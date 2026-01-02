@@ -1,0 +1,6 @@
+# executes a complete player turn: validates the move, updates the game, and checks for end conditions.
+GameState playPlayerTurn(int row, int col)
+# executes the bot's turn: asks the bot for a move and applies it to the board.
+GameState playBotTurn()
+# returns the current game state (RUNNING, PLAYER_WIN, BOT_WIN, DRAW)
+GameState getState()

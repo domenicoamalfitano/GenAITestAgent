@@ -1,0 +1,5 @@
+#Initializes an address with street, city, postal code and state
+Address(String street, String city, String postal_code, String state)
+
+#Returns a readable string representation of the address
+String toString()

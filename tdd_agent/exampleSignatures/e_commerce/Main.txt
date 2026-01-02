@@ -1,0 +1,2 @@
+#Starts the interactive e-commerce interface, NO tests necessary.
+void startApp()

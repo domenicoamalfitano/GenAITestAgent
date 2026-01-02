@@ -9,12 +9,12 @@ def load_llm():
         llm =ChatGroq(
             model=MODEL_LLM, 
             api_key=os.environ.get(GROQ_API_KEY), 
-            temperature=TEMPERATURE
+            temperature=TEMPERATURE,
         )
-        print(f"✅ Il modello LLM {MODEL_LLM} è stato caricato correttamente.")
+        print(f"✅ The LLM model {MODEL_LLM} has been loaded successfully.")
         return llm
     except Exception as e:
-        raise RuntimeError(f"❌ Errore nel caricare il modello: {e}")
+        raise RuntimeError(f"❌ Error loading the model: {e}")
         
 
 # create and return AgentExecutor

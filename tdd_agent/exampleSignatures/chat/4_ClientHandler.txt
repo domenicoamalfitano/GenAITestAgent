@@ -1,0 +1,17 @@
+# constructor of the ClientHandler class with fields:
+#Socket socket
+#ChatServer server - socket of the client
+#BufferedReader in - input from the client
+#PrintWriter out - output to the client
+#String nickname - client nickname
+ClientHandler(Socket socket, ChatServer server)
+# manages the communications with the client.
+# ask for a nickname
+# register the user
+# listen commands /msg <utente> <testo>
+# send messages
+void run()
+#analyze the command send from the client
+void gestisciComando(String input)
+# send a message to the client
+void invia(String input)

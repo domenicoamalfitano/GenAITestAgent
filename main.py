@@ -1,4 +1,4 @@
-from tdd_agent.config import TEST_JAVA_DIR, MAIN_JAVA_DIR, MAX_ITERATIONS
+from tdd_agent.config import TEST_JAVA_DIR, MAIN_JAVA_DIR, MAX_ITERATIONS, LOGS_DIR, WORKFLOW_LOG, PROMPT_COUNTERS
 from tdd_agent.core.tools import write_file_truncate, run_maven_test, read_file
 from tdd_agent.core.llm import load_llm, create_agent_executor
 from tdd_agent.core.exceptions import AgentInvokeError
@@ -8,10 +8,18 @@ from langchain.agents import Tool
 from tdd_agent.core.template import return_template_for_test_or_code
 from pathlib import Path
 from dotenv import load_dotenv
+import re, time
 
 load_dotenv('.env')
 
 if __name__ == "__main__":
+    start_time = time.perf_counter()# start time measurement
+
+    LOGS_DIR.mkdir(parents=True, exist_ok=True)
+    
+    with open(WORKFLOW_LOG, "w", encoding="utf-8") as log_main:
+        log_main.write(f"=== Workflow Log ===\n\n")
+        
     TEST_JAVA_DIR.mkdir(parents=True, exist_ok=True)
     MAIN_JAVA_DIR.mkdir(parents=True, exist_ok=True)
     
@@ -20,17 +28,17 @@ if __name__ == "__main__":
         Tool(
             name="write_file_truncate",
             func=write_file_truncate,
-            description="Salva codice in un file. Formato: 'percorso_file|||contenuto_codice'"
+            description="Save code to a file. Format: '{\"file_path\": \"file_path\", \"content\": \"code_content\"}'"
         ),
         Tool(
             name="run_maven_test",
             func=run_maven_test,
-            description="Esegue i test JUnit in un progetto Maven e restituisce un riepilogo."
+            description="Run JUnit tests in a Maven project and return a summary."
         ),
         Tool(
             name="read_file",
             func=read_file,
-            description="Legge il contenuto di un file specificato."
+            description="Read the content of a specified file."
         )
     ]
     tools_RED = tools[:2] # remove read_file tool for RED phase
@@ -38,7 +46,7 @@ if __name__ == "__main__":
     # create prompt templates for test and source code generation
     prompt_test = return_template_for_test_or_code("test")
     prompt_source = return_template_for_test_or_code("source")
-    print("✅ Prompt template creato")
+    print("✅ created prompt templates.")
     
     # load LLM and create agent executors
     llm = load_llm()
@@ -49,17 +57,24 @@ if __name__ == "__main__":
     agent_executor_refactor = create_agent_executor(llm, tools, prompt_source, MAX_ITERATIONS)
 
     # read all signature files
-    signature_files, files_path_source = load_signature_files()              
+    signature_files, files_path_source = load_signature_files()          
     if not signature_files:
         print("❌ No signature files found. Exiting.")
         exit(1)
         
-    print("🚀 Avvio Test Driven Development...")
+    print("🚀 Starting Test Driven Development...")
     for sig_file in signature_files:
+        
+        with open(WORKFLOW_LOG, "a", encoding="utf-8") as log_main:
+            log_main.write(f"- Processing signature file: {sig_file}\n")
         
         # read method signatures from the signature file
         methods = read_signatures(sig_file)
-        class_name = Path(sig_file).stem
+        stem = Path(sig_file).stem
+        if re.match(r"^[0-9]+_", stem):
+            class_name = re.sub(r"^[0-9]+_", "", stem)
+        else:
+            class_name = Path(sig_file).stem
         
         # process each method through the TDD phases
         for method_signature, method_description in methods:
@@ -67,5 +82,16 @@ if __name__ == "__main__":
                 process_method(method_signature, method_description, class_name, files_path_source, agent_executor_test, agent_executor_source, agent_executor_refactor)
             except AgentInvokeError as e:
                 print(e)
-            
-    print("✅ TDD completed.")
+
+    end_time = time.perf_counter()
+    elapsed_time = end_time - start_time
+    minutes, seconds = divmod(elapsed_time, 60)
+    
+    end_message = "✅ TDD completed."
+    total_num_prompts_message = f"Total prompts invoked - RED: {PROMPT_COUNTERS['RED']}, GREEN: {PROMPT_COUNTERS['GREEN']}, REFACTOR: {PROMPT_COUNTERS['REFACTOR']}\n"
+    time_message = f"Total execution time: {int(minutes)} minutes and {seconds:.2f} seconds\n"
+    print(end_message + "\n" + total_num_prompts_message + "\n" + time_message)
+
+    with open(WORKFLOW_LOG, "a", encoding="utf-8") as log_main:
+        log_main.write(f"\n\n{end_message}\n{total_num_prompts_message}\n{time_message}")
+    

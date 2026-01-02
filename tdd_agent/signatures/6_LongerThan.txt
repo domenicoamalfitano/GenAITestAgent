@@ -1,0 +1,6 @@
+# the class **implement** the interface "Rule"
+# constructor that assign the parameter value to the field int size.
+LongerThan(int size)
+
+# this method should return true if the string is longer than "size".
+public boolean isSatisfiedOn(String string)

@@ -1,0 +1,10 @@
+#Adds a new contact to the agenda
+void addContact(Contact c)
+# Removes a contact identified by name and surname; returns true if removed
+boolean removeContact(String firstName, String lastName)
+#Searches and returns the first contact with matching name; returns null if not found
+Contact searchByFirstName(String firstName)
+# Returns all contacts belonging to the specified category
+List<Contact> searchByCategory(Category category)
+#Returns a formatted string containing all stored contacts
+String printAll()

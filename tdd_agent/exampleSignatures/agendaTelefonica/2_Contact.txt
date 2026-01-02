@@ -1,0 +1,7 @@
+# Initializes a contact with name, surname, phone number, email, category and address
+# Category is an enum with: FRIEND, WORK, FAMILY, URGENT, OTHER.
+Contact(String firstName, String lastName, String phone, String email, Category category, Address address)
+# Returns the full name of the contact in "Nome Cognome" format
+String getFullName()
+#Returns a readable string representation of the contact
+String toString()

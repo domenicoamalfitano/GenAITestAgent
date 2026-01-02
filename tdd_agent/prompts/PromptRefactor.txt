@@ -1,6 +1,8 @@
 The goal is to apply one significant refactoring operation to the java source code provided and verify that ALL existing tests still pass.
 This ensures no regression is introduced.
 
+You MUST call a tool.
+
 You are given:
 - PATH OF THE SOURCE FILE: '{file_path}'
 
@@ -19,11 +21,13 @@ You are given:
 You have access to the following tools:
 
 1. **write_file_truncate**
-   - Use this tool to save your complete Java source code.
-   - It must be used exactly once per iteration.
-   -remember to format the java source code.
-   - Input format:'{file_path}|||<complete modified java source code>'
-   - You can use one write_file_truncate for one of the all class PATH given.
+   - Use this tool to save your complete and formatted Java source code.
+   - Use the JSON format.
+   - The 'file_path' MUST be a string enclosed in double quotes.
+   - Input format: {{
+                    "file_path": "{file_path}",
+                    "content": "code_content"
+                    }}
    - You can use this tool to write a file class tests, you must change the input path using "src/test/java/com/example/<className>Test.java" path.
    - You **MUST NOT** change the behavior of tests file, you can use this tool for file test only for correct tests that have outdated method name, parameter list, or field reference.
 
@@ -38,6 +42,7 @@ You have access to the following tools:
       Input format: '{file_path}'
    - You can use this tool for any specified source file.
    - Don't read the file with the new test added ({file_path}) and the corresponding test file beacause there are already given.
+   - Don't read .txt.java files
    - You can use this tool to read a file test, you must modify the {file_path} keeping the initial part up to /src and then replacing "src/main/java/com/example/<className>.java" with "src/test/java/com/example/<className>Test.java".
    - In the prompt is specified the content of the file '{file_path}', so try not to use the tool read_file for this.
    - It returns the content of the specified file.
@@ -49,27 +54,33 @@ You have access to the following tools:
 1. Safety First: The primary goal is to improve code structure, readability, and maintainability WITHOUT changing its external behavior.
 2. One change: Focus on ONE clear refactoring (e.g. Extract Method, Rename Variable) per attempt.
 3. Max Attempts: You have a maximum of 3 attempts to successfully refactor the code and pass all tests.
-4. Don't change the name of the class and don't change the name of the public methods.
+4. Do NOT change the name of the class and do NOT change the name of the public methods.
 5. Don't delete the public methods.
-5. **Rules of Refactoring:
-  - **Extract method**: When the methods are too long or duplicate code.
-    Do NOT extract a method when the code block is short, trivial, or only used once.
-  - **Rename variable/method**:Rename only if it significantly improves readability, rename it **only if it is not a standard algorithmic variable**.
-    Do NOT rename variables commonly used as loop indices or counters in algorithms: i, j, k, n, m, len, size, count.
-    Only rename variables/methods when it clearly improves readability without altering behavior.
-  - **Simplify conditional/loop**: When the conditional can be more readable without changing behavior.
-  - **Inline method/variable**: When the method or variable is trivial (e.g. return a constant or performs a single simple assignment).
-    Do not inline methods or variables with complex logic unless it is clearly redundant.
-  - **Replace magic numbers**: When it improves readability without changing behavior.
-    Do not replace numbers that are self-explanatory (e.g. 0 for a starting index, 1 for increment).
-  - **Remove duplicate methods using generic type**: When multiple methods differ only in their return type or the parameters type and share identical logic, consider to create a generic method.
-    Do not apply this refactor if the methods are trivial getter/setter without additional logic.
-    It is applicable if the repeted logic is significant (e.g. validations, transformations, calculations).
-6. If a test fails because it calls a method or accesses a variable that was removed or modified in the source code, you may:
-   - Identified that the test failure is due to an outdated method name, parameter list, or field reference.
-   - Update only the test calls (method name, parameters, or field accesses) to match the current source code.
-   - Do not change the behavior of test.
+5. **Refactoring Rules:
+  - **Extract method**:
+    Use it only for long or duplicated code blocks.
+    Do NOT extract trivial or single-use code.
+  - **Rename variable/method**:
+    Rename only if it **significantly** improves readability.
+    Do NOT rename common algorithmic variable names: i, j, k, n, m, len, size, count.
+    Do NOT rename public's methods.
+  - **Simplify conditional/loop**:
+    Allowed only when behavior remains exactly the same.
+  - **Inline method/variable**:
+    Only when the method or variable is trivial or redundant.
+  - **Replace magic numbers**:
+    Replace only when it improves clarity.
+    Do not replace self-explanatory numbers (e.g. starting index 0, increment 1).
+  - **Remove duplicate methods using generic type**:
+    Allowed when multiple methods share substantial identical logic, consider to create a generic method.
+    Not applicable to trivial getters/setters.
+6. If the refactoring changes how the class is instantiated or used, you can update the corresponding tests:
+   - You may ONLY modify tests to:
+    update constructor calls, update method names or parameter lists, update field accesses, replace instantiation with the new required pattern.
+   - Do not change test behavior.
    - Use write_file_truncate to save the corrected test file.
+7. You must not add tests.
+
 
 ### AGENT WORKFLOW:
 
@@ -84,8 +95,7 @@ You must follow these steps:
         Print exactly the following Final answer: Refactoring complete, code is clean. ✅ All tests passed successfully.
         Never execute another Action after that.
     - Do not try to do too much at once. Pick the smallest, most sensible change.
-    - Modify the source code (in memory) to apply the identified refactoring using the tool write_file_truncate with this input format:
-      '{file_path}|||<complete modified code>'
+    - Modify the source code to apply the identified refactoring using the tool write_file_truncate.
 
 **Step 2 Run Tests:**
     - Execute the tool run_maven_test to verify that all existing tests still pass.
@@ -95,12 +105,10 @@ You must follow these steps:
       
       * If tests FAIL:
         - Analyze the errors.
-        - If the failure is likely caused by renamed methods or variables:
-          Check the test files for calls to the renamed methods/variables.
-          Update the test files to use the new names accordingly using the tool write_file_truncate, don't use the input '{file_path}' but change it using "src/test/java/com/example/<class name>Test.java"
+        - If the failure is caused by the refactoring:
+          Check the test files or the refactored source file and apply a safe correction.
         - If it can be safely corrected without changing behavior, adjust and retry (up to 3 times).
-        - If tests still fail after 3 attempts, restore the previous working code using 
-          `write_file_truncate('{file_path}|||<code from the previous working version>')`
+        - If tests still fail after 3 attempts, restore the previous working code using the tool write_file_truncate.
           and terminate, communicating that rollback was done.
 
 **Step 3 Continue Refactoring:**
@@ -110,7 +118,3 @@ You must follow these steps:
     - When no more changes are needed, provide the final report:
       Final answer: Refactoring complete, code is clean. ✅ All tests passed successfully.
       Never execute another Action after that.
-
----
-
-At every point, ensure that all tests pass before proceeding to the next refactoring.

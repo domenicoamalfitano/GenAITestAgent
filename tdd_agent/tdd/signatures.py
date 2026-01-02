@@ -1,16 +1,29 @@
 from pathlib import Path
-import glob
+import glob, re
 from tdd_agent.config import SIGNATURES_DIR, MAIN_JAVA_DIR
-
 
 # load all signature files from the signatures directory and the string of source files paths
 def load_signature_files():
     signature_files = []
     files_path_source = ""
-    for filename in glob.glob(str(SIGNATURES_DIR / "*.txt")):
-        sig_name = Path(filename).stem
+    def sort_key(filename):
+        stem = Path(filename).stem
+        match = re.match(r"^([0-9]+)_", stem)
+        return int(match.group(1)) if match else float('inf')
+    
+    for filename in sorted(glob.glob(str(SIGNATURES_DIR / "*.txt")), key=sort_key):
+        path_sig_name = Path(filename)
+        sig_name = path_sig_name.stem
+        
+        if re.match(r"^[0-9]+_", sig_name):
+            sig_name = re.sub(r"^[0-9]+_", "", sig_name)
+            
+        # add to the list signature_files the correct filename's path.
         signature_files.append(filename)
-        files_path_source += f"{(str)(MAIN_JAVA_DIR/sig_name)}.java, "
+        
+        # add to the string files_path_source the source file path without numbering prefix
+        new_filename = path_sig_name.with_name(sig_name + path_sig_name.suffix)
+        files_path_source += f"{(str)(MAIN_JAVA_DIR/new_filename)}.java, ".replace(".txt", "")
         
     return signature_files, files_path_source
 

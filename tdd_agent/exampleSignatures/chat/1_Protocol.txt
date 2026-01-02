@@ -1,0 +1,4 @@
+# define consts of the communication protocol
+#consts:
+# String CMD_MSG = "/msg" - command to send private messages
+no tests are required

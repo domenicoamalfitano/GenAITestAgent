@@ -1,0 +1,24 @@
+# constructor that assign the parameter to the username field and initialize the fields following and followers with an empty ArrayList<User>
+User(String username)
+
+# return the size of followers
+int followerCount()
+
+# return true if the current user is followed by the user in the parameter
+boolean isFollowedBy(User user)
+
+# add the user currentUser to the followers of this user
+void addFollower(User currentUser)
+
+# return the size of following
+int followingCount()
+
+# return true if the current user follow the user in the parameter
+boolean isFollowing(User user)
+
+# check if the current user is not already following userToFollow.
+# the current user should follow the user userToFollow and after that, the user userToFollow should have the current user in the followers.
+void follow(User userToFollow)
+
+# return true if other is an instance of User and other have the same username of the current user
+boolean equals(Object other)

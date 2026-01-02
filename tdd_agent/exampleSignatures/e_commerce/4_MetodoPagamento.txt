@@ -1,0 +1,2 @@
+# this is an enum with this const: CARTA, PAYPAL, BONIFICO.
+No methods
