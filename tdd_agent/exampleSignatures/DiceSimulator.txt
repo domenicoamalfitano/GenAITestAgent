@@ -1,3 +1,0 @@
-# implement a dice game with two six-sided dice, print descriptive messages to the console. The method should return the total.
-# example: "the method is called" -> first dice = 5, second dice = 3, result = 8
-int diceGame()

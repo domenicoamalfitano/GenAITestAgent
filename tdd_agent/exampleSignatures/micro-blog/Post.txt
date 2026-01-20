@@ -1,6 +1,0 @@
-# constructor of the Post class with the fields: User user, String message
-# add the import: java.io.Serializable and the class Post must implements Serializable
-Post(User user, String message)
-
-# return true if  the username of user is mention 
-boolean mentions(User user)

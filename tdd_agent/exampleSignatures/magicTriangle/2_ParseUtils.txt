@@ -1,2 +1,0 @@
-# Parses a comma-separated string into a sorted triplet of triangle side lengths
-Triplet<Integer, Integer, Integer> parseInput(String input) throws InputException

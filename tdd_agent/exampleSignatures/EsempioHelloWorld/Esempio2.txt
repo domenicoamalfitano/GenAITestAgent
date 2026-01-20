@@ -1,2 +1,0 @@
-# print ciao mondo and hello world, using the classes Esempio and EsempioIT
-void Example(Esempio printEN, EsempioIT printIT)

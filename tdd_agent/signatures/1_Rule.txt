@@ -1,3 +1,0 @@
-# this is not a class, it is a interface
-# the method boolean isSatisfiedOn(String string) must be overrided by the class "ContainsAlphabeticChars", "ContainsDigits", "ContainsSpecialChars", "ContainsUpperCaseChars", "LongerThan"
-boolean isSatisfiedOn(String string);

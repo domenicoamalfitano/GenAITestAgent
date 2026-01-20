@@ -1,2 +1,0 @@
-# constructor for class Utente with fields nickname, ip (ip address of the client) and porta (local port used by client).
-Utente(String nickname, String ip, int porta)

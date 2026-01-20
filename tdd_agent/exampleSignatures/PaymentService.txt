@@ -1,3 +1,0 @@
-# implement a method that add funds at the account balance.
-# to add funds use the method boolean charge(float amount) of the interface PaymentGateway.
-void addFunds(float amount)

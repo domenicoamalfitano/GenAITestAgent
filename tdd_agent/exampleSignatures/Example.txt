@@ -1,3 +1,0 @@
-# class with fields String id, name and List<String> movie
-# this method must save this istance Example using the interface "Repository"
-void persist()

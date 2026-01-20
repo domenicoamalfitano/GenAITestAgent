@@ -1,2 +1,0 @@
-# Constructor that initializes an UserAccount object with the specified username, email, loginCount, and password hash. Don't create getter for passwordHash
-UserAccount(String username, String email, int loginCount, String passwordHash)

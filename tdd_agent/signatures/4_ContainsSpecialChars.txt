@@ -1,3 +1,0 @@
-# the class **implement** the interface "Rule"
-# this method should return true if the string contains at least one special char.
-public boolean isSatisfiedOn(String string)

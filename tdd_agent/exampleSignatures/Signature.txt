@@ -1,5 +1,0 @@
-float divide(int num, int den)
-#Sorts myArray in ascending order using bubble sort, repeatedly swapping adjacent out-of-order elements until no swaps are needed, then returns the sorted array
-int[] bubbleSort(int[] myArray)
-#Returns true if the given string looks like a valid email address (e.g., localpart@domain.tld) and false otherwise
-boolean isValidEmail(String email)

@@ -1,2 +1,0 @@
-# returns a human-readable string representation of the board
-String renderBoard()

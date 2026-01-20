@@ -1,4 +1,0 @@
-# computes and returns the bot's next move based on the current board state
-Move computeMove(char[][] board)
-# returns the symbol used by the bot (X or O)
-char getSymbol()

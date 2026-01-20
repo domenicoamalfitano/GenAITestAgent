@@ -81,9 +81,15 @@ You have access to the following tools:
                 `Final Answer: RED step successful. New failing test added to '{file_path}'. The process is ready for the GREEN (implementation) step.`
         - **ELSE IF** the observation is **BUILD_SUCCESS**:
             * This means the newly added test already passes.
-            * The agent must remove the newly added test by rewriting the file with its previous content and you don't write this test in the future iterations, use the tool ' write_file_truncate'.
-            * You MUST immediately return:
-                `Final Answer: There are already ✅ enough tests for this method. No new test added.`
+            * Increment an internal retry counter.
+            * IF the retry counter is LESS THAN 3:
+                - The agent MUST modify ONLY the newly added test to target a different uncovered behavior.
+                - Use the tool `write_file_truncate`.
+                - Go back to **Step B.1**.
+            * ELSE (retry counter == 3):
+                - The agent MUST remove the newly added test by restoring the previous file content using `write_file_truncate`.
+                - The agent MUST immediately return:
+                  `Final Answer: There are already ✅ enough tests for this method. No new test added.`
         - **ELSE IF** the observation is **COMPILATION_ERROR** due to syntax errors (e.g., missing semicolon, wrong import for Junit, type mismatch):
             * **ERROR!** The test is trivial or syntactically broken. It must be corrected before the RED step can be completed.
             * You must use the tool 'write_file_truncate'.
