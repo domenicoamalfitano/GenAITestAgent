@@ -1,9 +1,14 @@
 GenAITestAgent
-Copyright (c) 2025 Prof. Domenico Amalfitano and Antonio Giaquinto
+Copyright (c) 2025 
+Prof. Domenico Amalfitano and Antonio Giaquinto
 University of Naples Federico II
+Prof. Filippo Ricca and Carlo Arturo Zecca
+University of Genoa
 
-This project was developed as part of a bachelor’s thesis in Computer Engineering
-at the University of Naples Federico II, under the supervision of Prof. Domenico Amalfitano.
+This project was developed as part of a bachelor’s thesis in 
+Computer Engineering and Computer Science
+at the University of Naples Federico II and University of Genoa, 
+under the supervision of Prof. Domenico Amalfitano and Prof. Filippo Ricca.
 
 The software uses LangChain, langchain-groq, and Maven as dependencies,
 each covered by their respective licenses.
