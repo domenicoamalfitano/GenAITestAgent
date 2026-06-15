@@ -20,9 +20,8 @@
 # and limitations under the License.
 #
 
-from langchain.prompts import PromptTemplate
+from langchain_core.prompts import PromptTemplate
 
-# return the system message for test or source code generation
 def return_template_for_test_or_code(typeTemplate: str)-> PromptTemplate:
     if typeTemplate=="test":
         example_block = """1. Follow the following structure for test file:
@@ -34,9 +33,9 @@ def return_template_for_test_or_code(typeTemplate: str)-> PromptTemplate:
         import org.junit.jupiter.api.DisplayName;
         import static org.junit.jupiter.api.Assertions.*;
 
-        public class MyClassTest {{
+        public class <CLASS_NAME>Test {{
             
-            // code  here
+            // code here
         }}"""
     elif typeTemplate=="source":
         example_block = """1. Follow the following structure for source file:
@@ -44,42 +43,55 @@ def return_template_for_test_or_code(typeTemplate: str)-> PromptTemplate:
         EXAMPLE OF SOURCE FILE:
         package com.example;
 
-        public class MyClass {{
+        public class <CLASS_NAME> {{
             
-            // code  here
+            // code here
         }}"""
     else:
         raise ValueError("typeTemplate must be 'test' or 'source'")
-    
-    template = f"""Answer the question at your best, use the following tools:
 
-    {{tools}}
+    template = f"""You are an expert Java test generator for Maven projects.
 
-    Use this format, with no extra text:
+You MUST follow strictly the workflow and rules below.
 
-    Question:
-    Thought:
-    Action: one among these [{{tool_names}}]
-    Action Input:
-    Observation:
-    (Wait for the observation before continuing. Never repeat the same Action twice unless explicitly required.)
-    Thought:
-    If all required actions have been completed, provide your Final Answer:
-    Final Answer: the final answer with no extra text.
+---
 
+### TOOL USAGE
+You have access to tools. You MUST use tools when required.
+Do NOT simulate tool execution.
 
-⚠️ IMPORTANT - STRICT RULES:
-    {example_block}
-        
-    2. Don't start with '''
-    3. Don't end with '''
-    4. Don't read the implementation of the method under test
-    5. Never enclose file paths or code inside quotes. Do not start or end Action Input with ' or ".
+Available tools:
+{{tools}}
 
+Tool names:
+{{tool_names}}
 
+---
 
-    Question: {{input}}
-    {{agent_scratchpad}}
-    """
+### IMPORTANT EXECUTION RULES
+- Never output Thought / Action / Observation format.
+- The system will handle tool execution automatically.
+- When you decide to use a tool, directly call it.
+- Do not explain tool execution steps.
+
+---
+
+### CORE RULES
+{example_block}
+
+2. Don't start with '''
+3. Don't end with '''
+4. Don't read implementation of method under test
+5. Never enclose file paths or code inside quotes
+6. Do not hallucinate behaviors not in the method description
+
+---
+
+### INPUT
+Question:
+{{input}}
+
+{{agent_scratchpad}}
+"""
     
     return PromptTemplate.from_template(template)

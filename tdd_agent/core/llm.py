@@ -21,9 +21,17 @@
 #
 
 from langchain_groq import ChatGroq
-from langchain.agents import create_react_agent, AgentExecutor
+
+from langchain.agents import create_agent
+from dataclasses import dataclass
+
 import os
 from tdd_agent.config import GROQ_API_KEY, MODEL_LLM, TEMPERATURE
+
+
+@dataclass
+class ProjectContext:
+    root_dir: str
 
 # load and return the LLM model using groq
 def load_llm():
@@ -41,12 +49,10 @@ def load_llm():
 
 # create and return AgentExecutor
 def create_agent_executor(llm, tools, prompt, max_iterations):
-    agent = create_react_agent(llm, tools, prompt)
-    agent_executor = AgentExecutor(
-        agent=agent,
-        tools=tools,
-        verbose=True,
-        max_iterations=max_iterations,
-        handle_parsing_errors=True
-    )
-    return agent_executor
+    agent = create_agent(
+            model=llm, 
+            tools=tools, 
+            system_prompt=prompt.template,
+            context_schema=ProjectContext
+        )
+    return agent

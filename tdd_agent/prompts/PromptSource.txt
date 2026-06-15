@@ -6,11 +6,6 @@ You MUST call a tool.
 You are given:
 - PATH OF THE SOURCE FILE: '{file_path}'
 
-- SOURCE CODE that a new test has been added for it:
-{source}
-
-- TESTS OF THE CLASS:
-{tests}
 
 - ALL CLASS PATH OF THE SOURCE FILES: '{files_path_source}'
 

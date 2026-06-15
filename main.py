@@ -26,7 +26,9 @@ from tdd_agent.core.llm import load_llm, create_agent_executor
 from tdd_agent.core.exceptions import AgentInvokeError
 from tdd_agent.tdd.signatures import load_signature_files, read_signatures
 from tdd_agent.tdd.process import process_method
-from langchain.agents import Tool
+
+# from langchain.agents import Tool
+
 from tdd_agent.core.template import return_template_for_test_or_code
 from pathlib import Path
 from dotenv import load_dotenv
@@ -47,21 +49,9 @@ if __name__ == "__main__":
     
     # define the tools
     tools = [
-        Tool(
-            name="write_file_truncate",
-            func=write_file_truncate,
-            description="Save code to a file. Format: '{\"file_path\": \"file_path\", \"content\": \"code_content\"}'"
-        ),
-        Tool(
-            name="run_maven_test",
-            func=run_maven_test,
-            description="Run JUnit tests in a Maven project and return a summary."
-        ),
-        Tool(
-            name="read_file",
-            func=read_file,
-            description="Read the content of a specified file."
-        )
+        write_file_truncate,
+        run_maven_test,
+        read_file
     ]
     tools_RED = tools[:2] # remove read_file tool for RED phase
 

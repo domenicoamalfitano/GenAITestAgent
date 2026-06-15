@@ -42,7 +42,7 @@ PROMPT_REFACTOR = PROMPTS_DIR / "PromptRefactor.txt"
 
 MAX_RETRIES = 6
 GROQ_API_KEY = "GROQ_API_KEY"
-MODEL_LLM = "moonshotai/kimi-k2-instruct" # LLM model to use
+MODEL_LLM = "openai/gpt-oss-120b" # LLM model to use
 TEMPERATURE = 0.0
 MAX_ITERATIONS = 14
 # Responses from the agent

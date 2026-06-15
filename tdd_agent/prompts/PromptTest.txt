@@ -12,6 +12,7 @@ CURRENT CLASS TEST:
 ***
 
 ### TOOL USAGE:
+You are required to use tools whenever file changes or test execution is needed. Do not respond with plain text instead of tool usage.
 You have access to the following tools:
 
 1. **write_file_truncate**

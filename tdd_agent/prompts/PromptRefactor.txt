@@ -8,12 +8,6 @@ You are given:
 
 - ALL CLASS PATH OF THE SOURCE FILES: '{files_path_source}'
 
-- SOURCE CODE that a new test has been added for it:
-{source}
-
-- TESTS OF THE CLASS:
-{tests}
-
 ---
 
 ### TOOL USAGE:

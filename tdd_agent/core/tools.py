@@ -20,42 +20,103 @@
 # and limitations under the License.
 #
 
-import re, subprocess, json, sys, json_repair
+import re, subprocess, json, sys
 from pathlib import Path
 from tdd_agent.config import MAIN_JAVA_DIR, TEST_JAVA_DIR, JAVA_PROJECT_DIR, TIMEOUT_MVN
+from langchain.tools import tool
+
+
+def extract_test_summary(output: str):
+    tests_run = failures = errors = skipped = None
+
+    for line in output.splitlines():
+        if "Tests run:" in line:
+            match = re.search(
+                r"Tests run: (\d+), Failures: (\d+), Errors: (\d+), Skipped: (\d+)",
+                line
+            )
+            if match:
+                tests_run = int(match.group(1))
+                failures = int(match.group(2))
+                errors = int(match.group(3))
+                skipped = int(match.group(4))
+                break
+
+    return {
+        "tests_run": tests_run,
+        "failures": failures,
+        "errors": errors,
+        "skipped": skipped
+    }
+
+
+
+def list_directory(dir_path: str) -> str:
+    """List files and folders inside a directory."""
+
+    path = Path(dir_path).resolve()
+
+    if not path.exists():
+        return json.dumps({"error": "directory does not exist"})
+
+    if not path.is_dir():
+        return json.dumps({"error": "path is not a directory"})
+
+    items = [
+        {
+            "name": p.name,
+            "type": "dir" if p.is_dir() else "file"
+        }
+        for p in path.iterdir()
+    ]
+
+    return json.dumps({
+        "path": str(path),
+        "items": items
+    }, indent=2)
 
 
 # read the content of a file
-def read_file(input_str: str) -> str:
-    input_str = "".join(input_str.split())
-    path = Path(input_str).resolve()
+@tool
+def read_file(file_path: str) -> str:
+    """Read the content of a specified file."""
+    
+    # file_path = "".join(file_path.split())
+    path = Path(file_path.strip()).resolve()
+    print("TOOL EXECUTED -> read_file:", path)
     allowed_dirs = [MAIN_JAVA_DIR.resolve(), TEST_JAVA_DIR.resolve()]
     if not any(str(path).startswith(str(d)) for d in allowed_dirs):
         return f"Error: file path not allowed {path}"
     try:
-        with open(path, "r", encoding='utf-8') as f:
-            content = f.read()
-        
-        return content
+        if path.is_dir():
+            return list_directory(path)
+        # with open(path, "r", encoding='utf-8') as f:
+        #     content = f.read()
+        return path.read_text(encoding="utf-8")
+        # return content
     except Exception as e:
         return f"Error reading the file: {str(e)}"
 
 # write code to a file, truncating existing content
-def write_file_truncate(input_str: str) -> str:
+@tool
+def write_file_truncate(file_path: str, content: str) -> str:
+    """Save code to a file. Format: '{\"file_path\": \"file_path\", \"content\": \"code_content\"}'"""
     try:
-        input_str = input_str.replace("```json", "").replace("```", "").strip()
+        # file_path = file_path.replace("```json", "").replace("```", "").strip()
         
-        match = re.search(r'\{.*\}', input_str, re.DOTALL)
-        if not match:
-            return "Error: no JSON object found"
-        json_str = match.group(0)
+        # match = re.search(r'\{.*\}', file_path, re.DOTALL)
+        # if not match:
+        #     return "Error: no JSON object found"
+        # json_str = match.group(0)
         
-        try:
-            data = json_repair.loads(json_str)
-            path = Path(data["file_path"]).resolve()
-            code = data["content"]
-        except json.JSONDecodeError as e:
-            return f"Error decoding JSON: {str(e)}"
+        # try:
+            # data = json_repair.loads(json_str)
+            # path = Path(data["file_path"]).resolve()
+            # code = data["content"]
+        # except json.JSONDecodeError as e:
+            # return f"Error decoding JSON: {str(e)}"
+        
+        path = Path(file_path).resolve()
         
         # constraint: must be under MAIN_JAVA_DIR or TEST_JAVA_DIR
         allowed_dirs = [MAIN_JAVA_DIR.resolve(), TEST_JAVA_DIR.resolve()]
@@ -66,17 +127,19 @@ def write_file_truncate(input_str: str) -> str:
         
         # If the file exists, read its content and append only the new test methods
         with path.open("w", encoding='utf-8') as f:
-            f.write(code.strip())
+            f.write(content.strip())
 
         return f"Code saved successfully to {path}"
     except Exception as e:
         return f"Error saving the file: {str(e)}"
 
 # run the tests using maven and return the summary
+@tool
 def run_maven_test(input_str: str = "") -> str:
+    """Run JUnit tests in a Maven project and return a summary."""
     try:
         mvn_exe = r"C:\apache-maven-3.9.11\bin\mvn.cmd"
-        command = [mvn_exe, "test", "-DfailIfNoTests=false"]
+        command = [mvn_exe, "clean", "test", "-DfailIfNoTests=false"]
         if sys.platform == "win32":
             process = subprocess.Popen(
                 command,
@@ -132,6 +195,20 @@ def run_maven_test(input_str: str = "") -> str:
         else:
             finals_status = "===RUN_RESULT:BUILD_FAIL==="
         return f"{finals_status}\nExit code: {process.returncode}\n{test_summary}\n\nFull output:\n{output}"
+        
+        # summary = extract_test_summary(output)
+        # status = "BUILD_SUCCESS" if "BUILD SUCCESS" in output else "BUILD_FAIL"
+
+        # result = {
+        #     "status": status,
+        #     "exit_code": process.returncode,
+        #     **summary,
+        #     "raw_output": output
+        # }
+
+        # return json.dumps(result, indent=2)
+        
+        
 
     except subprocess.TimeoutExpired:
         return "Error: The Maven command timed out after 120 seconds."
@@ -139,3 +216,4 @@ def run_maven_test(input_str: str = "") -> str:
         return "Error: Maven is not installed or not in the PATH."
     except Exception as e:
         return f"Error running Maven: {str(e)}"
+    
